@@ -1,0 +1,30 @@
+package com.example.core.admin.dto.response.admin
+
+data class AdminItemRes(
+    var id: Long? = null,
+
+    /** 用户名 */
+    var username: String = "",
+
+    /** 昵称 */
+    var nickname: String? = null,
+
+    /** 邮箱 */
+    var email: String? = null,
+
+    /** 手机号 */
+    var mobile: String? = null,
+
+    /**
+     * 权限标识
+     * 直接透传 List，前端拿到的是标准的 JSON 数组格式 ["admin:add", "user:list"]
+     */
+    var permissionKey: List<String>? = null,
+
+    /** 禁用状态枚举值 */
+    var disabledStatus: Short,
+
+    var createdAt: String,
+    var updatedAt: String,
+    var deletedAt: String? = null
+)
