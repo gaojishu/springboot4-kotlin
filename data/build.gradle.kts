@@ -20,11 +20,6 @@ dependencies {
     // Source: https://mvnrepository.com/artifact/com.github.yulichang/mybatis-plus-join-boot-starter
     api("com.github.yulichang:mybatis-plus-join-boot-starter:1.5.6")
 
-    // 配置代码生成器
-    // Source: https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-generator
-    implementation("com.baomidou:mybatis-plus-generator:3.5.16")
-    // Source: https://mvnrepository.com/artifact/org.apache.velocity/velocity-engine-core
-    implementation("org.apache.velocity:velocity-engine-core:2.4.1")
 }
 
 // --- 打包配置：防止生成无法引用的可执行 Jar ---

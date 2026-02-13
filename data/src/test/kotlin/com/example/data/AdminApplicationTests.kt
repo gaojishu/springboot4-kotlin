@@ -20,9 +20,9 @@ class AdminApplicationTests {
 //        adminEntity.disabledStatus = AdminDisabledStatusEnum.DISABLED_FALSE
 //        adminMapper.insert(adminEntity)
 
-        val admin = adminMapper.selectById(5L)
-
-        adminMapper.deleteById(admin.id)
+//        val admin = adminMapper.selectById(5L)
+//
+//        adminMapper.deleteById(admin.id)
        // println(admin)
     }
 
