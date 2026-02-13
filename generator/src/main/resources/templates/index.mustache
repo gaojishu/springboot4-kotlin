@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyBatis-Plus Generator | Optimized</title>
+    <!-- 使用 BootStrap 5 与 Google Fonts -->
+    <link href="https://cdn.jsdelivr.net" rel="stylesheet">
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <!-- Lucide 图标库 -->
+    <script src="https://cdn.jsdelivr.net"></script>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --bg-color: #f8fafc;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="glass-card overflow-hidden">
+                <div class="card-header text-center">
+                    <h5 class="mb-0 text-white d-flex align-items-center justify-content-center gap-2">
+                        <i data-lucide="cpu"></i> Local Generator
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="mb-4 text-center">
+                        <p class="text-muted small">Mustache 引擎驱动 · 自动同步磁盘</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="tables" class="form-label fw-bold d-flex align-items-center gap-2">
+                            <i data-lucide="table-2" size="18"></i> 目标数据库表名
+                        </label>
+                        <input type="text" id="tables" class="form-control"
+                               placeholder="e.g. sys_user, t_order">
+                        <div class="form-text mt-2 d-flex align-items-center gap-1">
+                            <i data-lucide="info" size="14"></i>
+                            文件将直达 <code>/src/main/kotlin</code>
+                        </div>
+                    </div>
+
+                    <button onclick="runGenerator()" id="btnRun" class="btn btn-gen w-100 d-flex align-items-center justify-content-center gap-2">
+                        <i data-lucide="zap" size="18"></i> 执行代码生成
+                    </button>
+
+                    <div id="result" class="text-center mt-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 初始化图标
+    lucide.createIcons();
+    index.mustache
+    async function runGenerator() {
+        const btn = document.getElementById('btnRun');
+        const resDiv = document.getElementById('result');
+        const tables = document.getElementById('tables').value.trim();
+
+        if (!tables) {
+            showStatus("⚠️ 请输入表名", "text-warning");
+            return;
+        }
+
+        toggleLoading(true);
+
+        try {
+            const response = await fetch('/execute', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `tables=${encodeURIComponent(tables)}`
+            });
+            const msg = await response.text();
+
+            if (response.ok) {
+                showStatus(`✨ ${msg}`, "bg-success text-white px-3 py-2 rounded-3");
+            } else {
+                showStatus(`❌ ${msg}`, "text-danger");
+            }
+        } catch (err) {
+            showStatus("❌ 服务未启动或网络异常", "text-danger");
+        } finally {
+            toggleLoading(false);
+        }
+    }
+
+    function toggleLoading(isLoading) {
+        const btn = document.getElementById('btnRun');
+        const resDiv = document.getElementById('result');
+        btn.disabled = isLoading;
+        if (isLoading) {
+            btn.innerHTML = `<span class="spinner-border spinner-border-sm"></span> 写入中...`;
+            resDiv.innerHTML = `<span class="pulse text-primary small">正在扫描数据库元数据并映射模板...</span>`;
+        } else {
+            btn.innerHTML = `<i data-lucide="zap" size="18"></i> 执行代码生成`;
+            lucide.createIcons();
+        }
+    }
+
+    function showStatus(text, className) {
+        const resDiv = document.getElementById('result');
+        resDiv.innerHTML = `<div class="status-badge ${className}">${text}</div>`;
+    }
+</script>
+
+</body>
+</html>

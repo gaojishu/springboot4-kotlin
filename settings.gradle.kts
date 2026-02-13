@@ -1,7 +1,7 @@
 rootProject.name = "spring"
 
 // 注册所有模块
-include( ":core",":data",":base",":api-admin")
+include( ":core",":data",":base",":api-admin",":generator")
 // 👇 关键：在这里统一声明仓库
 dependencyResolutionManagement {
     repositories {

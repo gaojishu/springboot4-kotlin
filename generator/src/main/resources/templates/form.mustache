@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+</head>
+<body>
+
+<div class="container">
+    <h1>MyBatis-Plus 代码生成器 v1.1</h1>
+    <!-- Content here -->
+    <div id="result1" class="text-center mt-3"></div>
+    <form id="genForm" class="needs-validation" novalidate>
+        <div class="card">
+            <div class="row card-body align-items-center">
+                <div class="col">
+                    <button type="submit" class="btn btn-primary">提交</button>
+                </div>
+            </div>
+            <hr class="my-1"/>
+            <div class="row card-body align-items-center">
+                <div class="col-2">
+                    <div class="form-check">
+                        <input class="form-check-input" checked type="checkbox" id="selectAll">
+                        <label class="form-check-label fw-bold" for="selectAll">全选所有模块</label>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="input-group">
+                        <span class="input-group-text" id="table">表名</span>
+                        <label>
+                            <input required type="text" name="tables" class="form-control">
+                        </label>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="input-group">
+                        <span class="input-group-text" id="schema">模式</span>
+                        <label>
+                            <input type="text" name="schema" value="{{config.dbSchema}}" class="form-control">
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-1"/>
+            <div class="row card-body align-items-center">
+                <div class="col-2">
+                    <input name="entity" checked class="form-check-input item-checkbox" type="checkbox" value="true" id="entity">
+                    <label class="form-check-label" for="entity">
+                        实体生成
+                    </label>
+                </div>
+                <div class="col-6">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="entityPack">包名</span>
+                        <input type="text" value="{{config.entityPack}}" name="entityPack" class="form-control" placeholder="" aria-label="entityPack" aria-describedby="entityPack">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="entityPath">路径</span>
+                        <input type="text" value="{{config.entityPath}}" name="entityPath" class="form-control" placeholder="" aria-label="entityPath" aria-describedby="entityPath">
+                    </div>
+                </div>
+            </div>
+            <hr class="my-1"/>
+            <div class="row card-body align-items-center">
+                <div class="col-2">
+                    <input name="mapper" checked class="form-check-input item-checkbox" type="checkbox" value="true" id="mapper">
+                    <label class="form-check-label" for="mapper">
+                        接口生成
+                    </label>
+                </div>
+                <div class="col-6">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="mapperPack">包名</span>
+                        <input type="text" value="{{config.mapperPack}}" name="mapperPack" class="form-control" placeholder="" aria-label="mapperPack" aria-describedby="mapperPack">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="mapperPath">路径</span>
+                        <input type="text" value="{{config.mapperPath}}" name="mapperPath" class="form-control" placeholder="" aria-label="mapperPath" aria-describedby="mapperPath">
+                    </div>
+                </div>
+            </div>
+            <hr class="my-1"/>
+            <div class="row card-body align-items-center">
+                <div class="col-2">
+                    <input name="mapperXml" checked class="form-check-input item-checkbox" type="checkbox" value="true" id="mapperXml">
+                    <label class="form-check-label" for="mapperXml">
+                        接口xml生成
+                    </label>
+                </div>
+                <div class="col-6">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="mapperXmlPack">包名</span>
+                        <input type="text" value="{{config.mapperXmlPack}}" name="mapperXmlPack" class="form-control" placeholder="" aria-label="mapperXmlPack" aria-describedby="mapperPack">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="mapperXmlPath">路径</span>
+                        <input type="text" value="{{config.mapperXmlPath}}" name="mapperXmlPath" class="form-control" placeholder="" aria-label="mapperXmlPath" aria-describedby="mapperXmlPath">
+                    </div>
+                </div>
+            </div>
+            <hr class="my-1"/>
+            <div class="row card-body align-items-center">
+                <div class="col-2">
+                    <input name="service" checked class="form-check-input item-checkbox" type="checkbox" value="true" id="service">
+                    <label class="form-check-label" for="service">
+                        服务生成
+                    </label>
+                </div>
+                <div class="col-6">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="servicePack">包名</span>
+                        <input type="text" value="{{config.servicePack}}" name="servicePack" class="form-control" placeholder="" aria-label="servicePack" aria-describedby="servicePack">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="servicePath">路径</span>
+                        <input type="text" value="{{config.servicePath}}" name="servicePath" class="form-control" placeholder="" aria-label="servicePath" aria-describedby="servicePath">
+                    </div>
+                </div>
+            </div>
+            <hr class="my-1"/>
+            <div class="row card-body align-items-center">
+                <div class="col-2">
+                    <input name="serviceImpl" checked class="form-check-input item-checkbox" type="checkbox" value="true" id="serviceImpl">
+                    <label class="form-check-label" for="serviceImpl">
+                        服务实现生成
+                    </label>
+                </div>
+                <div class="col-6">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="serviceImplPack">包名</span>
+                        <input type="text" value="{{config.serviceImplPack}}" name="serviceImplPack" class="form-control" placeholder="" aria-label="serviceImplPack" aria-describedby="serviceImplPack">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="serviceImplPath">路径</span>
+                        <input type="text" value="{{config.serviceImplPath}}" name="serviceImplPath" class="form-control" placeholder="" aria-label="serviceImplPath" aria-describedby="serviceImplPath">
+                    </div>
+                </div>
+            </div>
+            <hr class="my-1"/>
+            <div class="row card-body align-items-center">
+                <div class="col-2">
+                    <input name="controller" checked class="form-check-input item-checkbox" type="checkbox" value="true" id="controller">
+                    <label class="form-check-label" for="controller">
+                        控制器生成
+                    </label>
+                </div>
+                <div class="col-6">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="controllerPack">包名</span>
+                        <input type="text" value="{{config.controllerPack}}" name="controllerPack" class="form-control" placeholder="" aria-label="controllerPack" aria-describedby="controllerPack">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="controllerPath">路径</span>
+                        <input type="text" value="{{config.controllerPath}}" name="controllerPath" class="form-control" placeholder="" aria-label="controllerPath" aria-describedby="controllerPath">
+                    </div>
+                </div>
+            </div>
+            <hr class="my-1"/>
+            <div class="row card-body align-items-center">
+                <div class="col">
+                    <button type="submit" class="btn btn-primary">提交</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div id="result2" class="text-center mt-3"></div>
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net"></script>
+</body>
+</html>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectAll = document.getElementById('selectAll');
+        const itemCheckboxes = document.querySelectorAll('.item-checkbox');
+
+        // 1. 全选 -> 子项
+        selectAll.addEventListener('change', function() {
+            itemCheckboxes.forEach(cb => {
+                cb.checked = this.checked;
+            });
+        });
+
+        // 2. 子项 -> 全选 (监听每一个子项的点击)
+        itemCheckboxes.forEach(cb => {
+            cb.addEventListener('change', function() {
+                // 检查已选中的数量是否等于总数
+                const checkedCount = document.querySelectorAll('.item-checkbox:checked').length;
+                selectAll.checked = (checkedCount === itemCheckboxes.length);
+
+                // 可选：设置半选状态 (Indeterminate)
+                selectAll.indeterminate = (checkedCount > 0 && checkedCount < itemCheckboxes.length);
+            });
+        });
+    });
+
+
+    (() => {
+        'use strict'
+        const form = document.getElementById('genForm');
+        form.addEventListener('submit', event => {
+
+            event.preventDefault()
+            event.stopPropagation()
+            form.classList.add('was-validated')
+
+            if (!form.checkValidity()) {
+                return;
+            }
+            const formData = new FormData(form);
+            // 转换为普通对象
+            const data = Object.fromEntries(formData.entries());
+
+            console.log(data);
+
+            submit(data)
+        }, false)
+    })()
+
+    async function submit(data) {
+        try {
+            const response = await fetch('/execute', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const msg = await response.text();
+
+            if (response.ok) {
+                showStatus(`✨ ${msg}`, "bg-success text-white px-3 py-2 rounded-3");
+            } else {
+                showStatus(`❌ ${msg}`, "text-danger");
+            }
+        } catch (err) {
+            showStatus("❌ 服务未启动或网络异常", "text-danger");
+        } finally {
+            toggleLoading(false);
+        }
+    }
+
+    function showStatus(text, className) {
+        const resDiv1 = document.getElementById('result1');
+        resDiv1.innerHTML = `<div class="status-badge ${className}">${text}</div>`;
+        const resDiv2 = document.getElementById('result2');
+        resDiv2.innerHTML = `<div class="status-badge ${className}">${text}</div>`;
+    }
+</script>

@@ -1,0 +1,12 @@
+package ${package.Mapper}
+
+import com.github.yulichang.base.MPJBaseMapper
+import ${package.Entity}.${table.entityName}
+
+/**
+ * @author xkl
+ * @since 2026-02-12
+ */
+interface ${table.mapperName} : MPJBaseMapper<${table.entityName}> {
+
+}

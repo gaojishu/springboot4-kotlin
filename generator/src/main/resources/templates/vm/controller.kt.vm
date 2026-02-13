@@ -1,0 +1,12 @@
+package ${package.Controller}
+
+import org.springframework.web.bind.annotation.*
+import org.springframework.beans.factory.annotation.Autowired
+import ${package.Service}.${table.serviceName}
+
+@RestController
+@RequestMapping("/${table.name}")
+class ${table.controllerName}{
+    @Autowired
+    lateinit var ${table.name}Service: ${table.serviceName}
+}
