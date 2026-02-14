@@ -17,6 +17,8 @@ dependencies {
     // Source: https://mvnrepository.com/artifact/org.mapstruct/mapstruct
     implementation("org.mapstruct:mapstruct:1.6.3")
     kapt("org.mapstruct:mapstruct-processor:1.6.3")
+    // Source: https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-jsqlparser
+    api("com.baomidou:mybatis-plus-jsqlparser:3.5.16")
 
 }
 

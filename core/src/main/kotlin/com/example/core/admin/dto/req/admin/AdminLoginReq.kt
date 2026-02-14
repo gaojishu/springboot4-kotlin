@@ -1,4 +1,4 @@
-package com.example.core.admin.dto.request.admin
+package com.example.core.admin.dto.req.admin
 
 import jakarta.validation.constraints.NotBlank
 
@@ -14,5 +14,4 @@ data class AdminLoginReq(
 
     @field:NotBlank(message = "验证码 UUID 不能为空")
     val captchaUuid: String?
-
 )

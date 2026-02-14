@@ -1,8 +1,8 @@
-package com.example.core.admin.dto.response.admin
+package com.example.core.admin.dto.res.admin
+
+import com.example.core.admin.dto.res.BaseRes
 
 data class AdminItemRes(
-    var id: Long? = null,
-
     /** 用户名 */
     var username: String = "",
 
@@ -24,7 +24,5 @@ data class AdminItemRes(
     /** 禁用状态枚举值 */
     var disabledStatus: Short,
 
-    var createdAt: String,
-    var updatedAt: String,
     var deletedAt: String? = null
-)
+): BaseRes()

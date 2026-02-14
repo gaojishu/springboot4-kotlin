@@ -2,7 +2,7 @@ package com.example.core.admin.service.impl
 
 import cn.hutool.captcha.CaptchaUtil
 import com.example.core.admin.domain.service.CaptchaDomainService
-import com.example.core.admin.dto.response.CaptchaRes
+import com.example.core.admin.dto.res.CaptchaRes
 import com.example.core.admin.service.CaptchaService
 import org.springframework.stereotype.Service
 import java.util.UUID

@@ -1,4 +1,4 @@
-package com.example.core.admin.dto.response.admin
+package com.example.core.admin.dto.res.admin
 
 data class AdminLoginRes(
     val token: String,

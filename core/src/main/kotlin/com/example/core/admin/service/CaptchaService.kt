@@ -1,6 +1,6 @@
 package com.example.core.admin.service
 
-import com.example.core.admin.dto.response.CaptchaRes
+import com.example.core.admin.dto.res.CaptchaRes
 
 interface CaptchaService {
     fun createCaptcha(): CaptchaRes

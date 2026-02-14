@@ -1,6 +1,6 @@
 package com.example.core.admin.converter
 
-import com.example.core.admin.dto.response.admin.AdminItemRes
+import com.example.core.admin.dto.res.admin.AdminItemRes
 import com.example.data.admin.entity.AdminEntity
 import org.mapstruct.Mapper
 import org.mapstruct.Mapping

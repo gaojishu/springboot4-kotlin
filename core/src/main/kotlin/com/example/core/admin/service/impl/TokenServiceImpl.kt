@@ -2,7 +2,7 @@ package com.example.core.admin.service.impl
 
 import com.example.core.admin.constants.RedisConstant
 import com.example.core.admin.domain.service.TokenDomainService
-import com.example.core.admin.dto.response.admin.AdminLoginRes
+import com.example.core.admin.dto.res.admin.AdminLoginRes
 import com.example.core.admin.service.TokenService
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service

@@ -1,4 +1,4 @@
-package com.example.core.admin.dto.response
+package com.example.core.admin.dto.res
 
 data class CaptchaRes(
     val uuid: String,
