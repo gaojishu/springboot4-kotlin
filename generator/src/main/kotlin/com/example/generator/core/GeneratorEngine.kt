@@ -1,9 +1,11 @@
 package com.example.generator.core
 
 import com.baomidou.mybatisplus.generator.FastAutoGenerator
+import com.baomidou.mybatisplus.generator.config.InjectionConfig
 import com.baomidou.mybatisplus.generator.config.OutputFile
 import com.baomidou.mybatisplus.generator.config.PackageConfig
 import com.baomidou.mybatisplus.generator.config.StrategyConfig
+import com.baomidou.mybatisplus.generator.config.builder.CustomFile
 import com.baomidou.mybatisplus.generator.config.rules.IColumnType
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy
 import com.baomidou.mybatisplus.generator.engine.VelocityTemplateEngine
@@ -36,6 +38,7 @@ class GeneratorEngine(
                 builder.author("xkl").enableKotlin().commentDate("yyyy-MM-dd")
                     .outputDir(config.rootPath).disableOpenDir()
             }
+            .injectionConfig { builder -> injectionConfig( builder)}
             .packageConfig { builder -> configurePackages(builder) }
             .strategyConfig { builder -> configureStrategy(builder) }
             .templateEngine(VelocityTemplateEngine())
@@ -57,19 +60,24 @@ class GeneratorEngine(
                 OutputFile.xml to "$root${params.mapperXmlPath}",
                 OutputFile.service to "$root${params.servicePath}",
                 OutputFile.serviceImpl to "$root${params.serviceImplPath}",
-                OutputFile.controller to "$root${params.controllerPath}"
+                OutputFile.controller to "$root${params.controllerPath}",
             ))
     }
 
+
+    private fun injectionConfig(builder: InjectionConfig.Builder){
+
+    }
+
     private fun configureStrategy(builder: StrategyConfig.Builder) {
-        builder.addInclude(params.tables)
+        builder.addInclude(params.table)
             .addTablePrefix(config.dbPrefix) // 去前缀
 
         // 1. Entity 配置
         val entity = builder.entityBuilder()
         entity.kotlinTemplatePath("/templates/vm/entity.kt.vm") // 设置实体类模板
         entity.disableSerialVersionUID()
-        entity.formatFileName("%sEntity1")
+        entity.formatFileName("%sEntity")
         entity.naming(NamingStrategy.underline_to_camel)
         entity.columnNaming(NamingStrategy.underline_to_camel)
         entity.superClass("com.example.data.admin.entity.BaseEntity") // 设置父类的全类名
@@ -79,7 +87,7 @@ class GeneratorEngine(
         // 2.Mapper 配置
         val mapper = builder.mapperBuilder()
         mapper.mapperTemplate("/templates/vm/mapper.kt.vm")
-        mapper.formatMapperFileName("%sMapper1") // 如 UserMapper
+        mapper.formatMapperFileName("%sMapper") // 如 UserMapper
         mapper.enableBaseResultMap() //xml
         mapper.superClass("com.github.yulichang.base.MPJBaseMapper")
         params.mapper ?: mapper.disable()
@@ -89,8 +97,8 @@ class GeneratorEngine(
         val service = builder.serviceBuilder()
         service.serviceTemplate("/templates/vm/service.kt.vm")
         service.serviceImplTemplate("/templates/vm/service-impl.kt.vm")
-        service.formatServiceFileName("%sService1")      // 去掉默认的 I 前缀 (如果你不喜欢 IUserService)
-        service.formatServiceImplFileName("%sServiceImpl1")
+        service.formatServiceFileName("%sService")      // 去掉默认的 I 前缀 (如果你不喜欢 IUserService)
+        service.formatServiceImplFileName("%sServiceImpl")
         service.mapperBuilder()
         params.service ?: service.disableService()
         params.serviceImpl ?: service.disableServiceImpl()
@@ -99,7 +107,8 @@ class GeneratorEngine(
         val controller = builder.controllerBuilder()
         controller.template("/templates/vm/controller.kt.vm")
         controller.enableRestStyle()
-        controller.formatFileName("%sController1")
+        controller.formatFileName("%sController")
+
         params.controller ?: service.disable()
     }
 
@@ -111,10 +120,10 @@ class GeneratorEngine(
             val metaData = conn.metaData
 
             // 注意：很多数据库驱动对表名大小写敏感，建议必要时转大写或小写
-            val rs = metaData.getTables(null, params.schema, params.tables, arrayOf("TABLE"))
+            val rs = metaData.getTables(null, params.schema, params.table, arrayOf("TABLE"))
             val ne = rs.next()
            if (!ne){
-               throw Exception("${params.tables}表不存在")
+               throw Exception("${params.table}表不存在")
            }
         } catch (e: Exception) {
            throw e

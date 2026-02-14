@@ -9,4 +9,6 @@ import ${package.Service}.${table.serviceName}
 class ${table.controllerName}{
     @Autowired
     lateinit var ${table.name}Service: ${table.serviceName}
+
+
 }

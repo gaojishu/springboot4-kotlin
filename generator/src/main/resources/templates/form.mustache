@@ -27,7 +27,7 @@
                         <label class="form-check-label fw-bold" for="selectAll">全选所有模块</label>
                     </div>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                     <div class="input-group">
                         <span class="input-group-text" id="table">表名</span>
                         <label>
@@ -35,7 +35,7 @@
                         </label>
                     </div>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                     <div class="input-group">
                         <span class="input-group-text" id="schema">模式</span>
                         <label>
@@ -46,13 +46,13 @@
             </div>
             <hr class="my-1"/>
             <div class="row card-body align-items-center">
-                <div class="col-2">
+                <div class="col-1">
                     <input name="entity" checked class="form-check-input item-checkbox" type="checkbox" value="true" id="entity">
                     <label class="form-check-label" for="entity">
                         实体生成
                     </label>
                 </div>
-                <div class="col-6">
+                <div class="col-4">
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="entityPack">包名</span>
                         <input type="text" value="{{config.entityPack}}" name="entityPack" class="form-control" placeholder="" aria-label="entityPack" aria-describedby="entityPack">
@@ -60,6 +60,22 @@
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="entityPath">路径</span>
                         <input type="text" value="{{config.entityPath}}" name="entityPath" class="form-control" placeholder="" aria-label="entityPath" aria-describedby="entityPath">
+                    </div>
+                </div>
+                <div class="col-1">
+                    <input name="mapper" checked class="form-check-input item-checkbox" type="checkbox" value="true" id="mapper">
+                    <label class="form-check-label" for="mapper">
+                        接口生成
+                    </label>
+                </div>
+                <div class="col-4">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="mapperPack">包名</span>
+                        <input type="text" value="{{config.mapperPack}}" name="mapperPack" class="form-control" placeholder="" aria-label="mapperPack" aria-describedby="mapperPack">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="mapperPath">路径</span>
+                        <input type="text" value="{{config.mapperPath}}" name="mapperPath" class="form-control" placeholder="" aria-label="mapperPath" aria-describedby="mapperPath">
                     </div>
                 </div>
             </div>
@@ -71,7 +87,7 @@
                         接口生成
                     </label>
                 </div>
-                <div class="col-6">
+                <div class="col-3">
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="mapperPack">包名</span>
                         <input type="text" value="{{config.mapperPack}}" name="mapperPack" class="form-control" placeholder="" aria-label="mapperPack" aria-describedby="mapperPack">

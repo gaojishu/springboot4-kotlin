@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import com.example.generator.dto.req.GeneratorReq
+import com.example.generator.dto.res.ApiResult
 
 @Controller
 class IndexController {
@@ -20,12 +21,12 @@ class IndexController {
 
     @PostMapping("/execute")
     @ResponseBody // 返回简单字符串即可
-    fun execute(@RequestBody params: GeneratorReq): String {
-        println(params)
+    fun execute(@RequestBody params: GeneratorReq): ApiResult<Unit> {
+
         val props = GeneratorProps(System.getProperty("user.dir"))
 
         GeneratorEngine(props,params).execute()
 
-        return "成功"
+        return ApiResult.ok<Unit>().message("生成成功")
     }
 }

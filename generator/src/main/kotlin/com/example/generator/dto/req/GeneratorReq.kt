@@ -1,8 +1,9 @@
 package com.example.generator.dto.req
 
 data class GeneratorReq(
-    val tables: String,
+    val table: String,
     val schema: String,
+    val method: List<String>?,
 
     val entity: String?,
     val entityPack: String,

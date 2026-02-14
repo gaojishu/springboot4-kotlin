@@ -1,4 +1,4 @@
-package com.example.api.admin.dto
+package com.example.generator.dto.res
 
 import java.io.Serializable
 

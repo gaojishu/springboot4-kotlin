@@ -1,0 +1,12 @@
+package ${package.Res}
+
+import com.example.core.admin.dto.res.BaseRes
+
+/**
+ * ${table.comment} 响应类
+ */
+data class Res(
+    #foreach($field in ${table.fields})
+        var ${field.propertyName}: ${field.propertyType}? = null#if($foreach.hasNext),#end
+    #end
+) : BaseRes()
