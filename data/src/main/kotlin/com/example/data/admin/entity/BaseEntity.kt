@@ -1,7 +1,7 @@
 package com.example.data.admin.entity
 
 import com.baomidou.mybatisplus.annotation.*
-import java.time.OffsetDateTime
+import java.time.LocalDateTime
 
 abstract class BaseEntity {
 
@@ -10,10 +10,10 @@ abstract class BaseEntity {
 
     /** 创建时间：仅在插入时填充 */
     @TableField(fill = FieldFill.INSERT)
-    var createdAt: OffsetDateTime? = null
+    var createdAt: LocalDateTime? = null
 
     /** 更新时间：在插入和更新时均填充 */
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    var updatedAt: OffsetDateTime? = null
+    var updatedAt: LocalDateTime? = null
 
 }

@@ -28,8 +28,8 @@ class SecurityConfig(
         http.addFilterBefore(authFilter,UsernamePasswordAuthenticationFilter::class.java)
 
         val array = arrayOf(
-            "/admin/login",
-            "/admin/index",
+            "/auth/login",
+            "/auth/index",
             "/common/**",
         )
         http.csrf { it.disable() }//禁用csrf

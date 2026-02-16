@@ -1,7 +1,12 @@
 package com.example.core.admin.dto.res
 
+import com.fasterxml.jackson.annotation.JsonFormat
+import java.time.LocalDateTime
+
 abstract class BaseRes{
     var id: Long? = null
     var createdAt: String = ""
-    var updatedAt: String = ""
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    var updatedAt: LocalDateTime? = null
 }

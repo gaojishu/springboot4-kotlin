@@ -17,7 +17,6 @@ import com.example.core.admin.dto.req.admin.AdminCreateReq
 import com.example.core.admin.dto.req.admin.AdminUpdateReq
 import com.example.core.admin.dto.req.admin.AdminQueryReq
 import com.example.core.admin.dto.res.admin.AdminItemRes
-import com.example.core.admin.security.LoginAdmin
 import org.springframework.security.core.context.SecurityContextHolder
 import com.baomidou.mybatisplus.core.metadata.IPage
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
@@ -30,9 +29,9 @@ class AdminServiceImpl(
     private val captchaDomainService: CaptchaDomainService,
     private val passwordEncoder: PasswordEncoder,
 ): ServiceImpl<AdminMapper, AdminEntity>(),AdminService {
-    private fun buildWrapper(adminQueryReq: AdminQueryReq): KtQueryWrapper<AdminEntity> {
-        val params = adminQueryReq.params
-        val sort = adminQueryReq.sort
+    private fun buildWrapper(req: AdminQueryReq): KtQueryWrapper<AdminEntity> {
+        val params = req.params
+        val sort = req.sort
 
         val wrapper = KtQueryWrapper(AdminEntity::class.java)
             .like(params.username != null, AdminEntity::username, params.username)
@@ -46,12 +45,12 @@ class AdminServiceImpl(
         return wrapper
     }
 
-    override fun page(adminQueryReq: AdminQueryReq): IPage<AdminItemRes> {
+    override fun page(req: AdminQueryReq): IPage<AdminItemRes> {
         val page = Page<AdminEntity>(
-            adminQueryReq.params.current,
-            adminQueryReq.params.pageSize
+            req.params.current,
+            req.params.pageSize
         )
-        val buildWrapper = buildWrapper(adminQueryReq)
+        val buildWrapper = buildWrapper(req)
         val wrapper = baseMapper.selectPage(page, buildWrapper)
 
         return wrapper.convert { AdminConverter.INSTANCE.toRes(it) }
@@ -65,50 +64,47 @@ class AdminServiceImpl(
     /**
      * 创建
      */
-    override fun create(adminCreateReq: AdminCreateReq): AdminItemRes? {
+    override fun create(req: AdminCreateReq): Boolean {
         adminDomainService.validateUsernameAndPasswordFormat(
-            adminCreateReq.username,
-            adminCreateReq.password
+            req.username,
+            req.password
         )
         val admin = AdminEntity().apply {
-            adminCreateReq.username.let{ username = it}
-            adminCreateReq.password.let{ password = passwordEncoder.encode(it).toString() }
-            adminCreateReq.disabledStatus.let{ disabledStatus = it }
-            adminCreateReq.mobile?.let{ mobile = it }
-            adminCreateReq.email?.let{ email = it }
-            adminCreateReq.nickname?.let{ nickname = it }
-            adminCreateReq.permissionKey?.let{ permissionKey = it }
+            username = req.username
+            password = passwordEncoder.encode(req.password).toString()
+            mobile = req.mobile
+            email = req.email
+            nickname = req.nickname
+            disabledStatus = req.disabledStatus
         }
-        baseMapper.insert(admin)
-        return admin.let { AdminConverter.INSTANCE.toRes(admin) }
+        val res = baseMapper.insert(admin)
+        return res > 0
     }
 
-    override fun updateById(adminUpdateReq: AdminUpdateReq): AdminItemRes? {
+    override fun updateById(req: AdminUpdateReq): Boolean {
 
-        adminUpdateReq.username?.let {
+        req.username?.let {
             adminDomainService.validateUsernameFormat(
                 it
             )
         }
-        adminUpdateReq.password?.let {
+        req.password?.let {
             adminDomainService.validatePasswordFormat(
                 it
             )
         }
-        val admin = baseMapper.selectById(adminUpdateReq.id)
-        if (admin == null) {
-            throw BusinessException("用户不存在")
-        }
-        admin.apply {
-            adminUpdateReq.username?.let{ username = it }
-            adminUpdateReq.password?.let{ password = passwordEncoder.encode(it).toString() }
-            adminUpdateReq.disabledStatus?.let{ disabledStatus = it }
-            adminUpdateReq.mobile?.let{ mobile = it }
-            adminUpdateReq.email?.let{ email = it }
-            adminUpdateReq.nickname?.let{ nickname = it }
-            adminUpdateReq.permissionKey?.let{ permissionKey = it }
-        }
-        return admin.let { AdminConverter.INSTANCE.toRes(admin) }
+
+      val entity =  this.ktUpdate().apply {
+            eq(AdminEntity::id, req.id)
+            set(req.username != null, AdminEntity::username, req.username)
+            set(req.password != null, AdminEntity::password, passwordEncoder.encode(req.password).toString())
+            set(req.disabledStatus != null, AdminEntity::disabledStatus, req.disabledStatus)
+            set(AdminEntity::mobile, req.mobile)
+            set(AdminEntity::email, req.email)
+            set(AdminEntity::nickname, req.nickname)
+            set(AdminEntity::permissionKey, req.permissionKey)
+        }.update()
+        return entity
     }
 
     override fun logout() {
@@ -119,13 +115,6 @@ class AdminServiceImpl(
         return admin?.let { AdminConverter.INSTANCE.toRes(admin) }
     }
 
-    override fun info(): AdminItemRes? {
-        val loginAdmin = SecurityContextHolder.getContext().authentication?.let { it.principal as? LoginAdmin }
-        val adminId = loginAdmin?.adminId
-
-        val admin = baseMapper.selectById(adminId)
-        return admin?.let { AdminConverter.INSTANCE.toRes(admin) }
-    }
 
     override fun login(adminLoginReq: AdminLoginReq): AdminLoginRes {
         // 1. 验证码校验

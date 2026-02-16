@@ -3,7 +3,7 @@ plugins {
     kotlin("plugin.spring") version "2.2.21"
     id("org.springframework.boot") version "4.0.2" apply false
     id("io.spring.dependency-management") version "1.1.7"
-
+   // id("nu.studer.jooq") version "10.1.1"
     kotlin("kapt") version "2.2.21"
 }
 group = "com.example"
@@ -26,6 +26,7 @@ subprojects {
     apply(plugin = "io.spring.dependency-management")
     apply(plugin = "org.springframework.boot")
     apply(plugin = "org.jetbrains.kotlin.kapt")
+   // apply(plugin = "nu.studer.jooq")
     java {
         toolchain {
             languageVersion = JavaLanguageVersion.of(21)

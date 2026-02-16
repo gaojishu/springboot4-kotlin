@@ -2,7 +2,6 @@ package com.example.data.admin.enums.admin
 
 import com.baomidou.mybatisplus.annotation.EnumValue
 import com.example.base.dto.ValueLabel
-import com.fasterxml.jackson.annotation.JsonCreator
 
 enum class AdminDisabledStatusEnum(
     @EnumValue val value: Short, // 告诉 MyBatis-Plus：存这个值到数据库
@@ -14,15 +13,13 @@ enum class AdminDisabledStatusEnum(
     companion object {
         private val map = entries.associateBy { it.value }
 
-        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
-        @JvmStatic
         fun fromValue(value: Short): AdminDisabledStatusEnum {
             return map[value] ?: DISABLED_FALSE
         }
 
-        fun getAllValueLabel(): List<ValueLabel<Short>> {
+        fun getAllValueLabel(): List<ValueLabel<String>> {
             return entries.map {
-                ValueLabel(it.value, it.label)
+                ValueLabel(it.name, it.label)
             }
         }
 

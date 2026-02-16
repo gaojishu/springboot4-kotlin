@@ -14,8 +14,4 @@
         <result column="username" property="username" />
     </resultMap>
 
-    <!-- 查询示例 -->
-<!--    <select id="selectById" resultMap="BaseResultMap">-->
-<!--          SELECT * FROM admin WHERE id = #{id} AND deleted_at IS NULL-->
-<!--    </select>-->
 </mapper>

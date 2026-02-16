@@ -20,6 +20,8 @@ dependencies {
     // Source: https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-jsqlparser
     api("com.baomidou:mybatis-plus-jsqlparser:3.5.16")
 
+
+
 }
 
 // --- 打包配置：防止生成无法引用的可执行 Jar ---

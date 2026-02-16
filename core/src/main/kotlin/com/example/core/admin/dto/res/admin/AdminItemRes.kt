@@ -1,6 +1,8 @@
 package com.example.core.admin.dto.res.admin
 
 import com.example.core.admin.dto.res.BaseRes
+import com.example.data.admin.enums.admin.AdminDisabledStatusEnum
+import com.example.data.admin.enums.permission.PermissionTypeEnum
 
 data class AdminItemRes(
     /** 用户名 */
@@ -22,7 +24,7 @@ data class AdminItemRes(
     var permissionKey: List<String>? = null,
 
     /** 禁用状态枚举值 */
-    var disabledStatus: Short,
+    var disabledStatus: AdminDisabledStatusEnum? = null,
 
     var deletedAt: String? = null
 ): BaseRes()

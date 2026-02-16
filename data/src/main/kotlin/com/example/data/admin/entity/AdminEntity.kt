@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableLogic
 import com.baomidou.mybatisplus.annotation.TableName
 import com.baomidou.mybatisplus.extension.handlers.Jackson3TypeHandler
 import com.example.data.admin.enums.admin.AdminDisabledStatusEnum
-import java.time.OffsetDateTime
+import java.time.LocalDateTime
 
 @TableName("admin.admin", autoResultMap = true)
 data class AdminEntity(
@@ -35,5 +35,5 @@ data class AdminEntity(
     /** 逻辑删除：MyBatis-Plus 自动管理，无需手动赋值 */
     @TableLogic
     @TableField(select = false) // 查询时默认不返回该字段
-    var deletedAt: OffsetDateTime? = null
+    var deletedAt: LocalDateTime? = null
     ): BaseEntity()

@@ -1,15 +1,20 @@
-// data 模块：实体
 plugins {
     `java-library` // 必须添加这个插件才能使用 api 关键字
+
+   // id("nu.studer.jooq")
+
+    id("org.jooq.jooq-codegen-gradle") version "3.19.30"
+
+
 }
 dependencies {
     // 引用内部模块
    implementation(project(":base"))
 
+    jooqCodegen("org.postgresql:postgresql")
 
     //数据库
     runtimeOnly("org.postgresql:postgresql")
-
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
     api("org.springframework.boot:spring-boot-starter-data-redis")
@@ -19,6 +24,12 @@ dependencies {
 
     // Source: https://mvnrepository.com/artifact/com.github.yulichang/mybatis-plus-join-boot-starter
     api("com.github.yulichang:mybatis-plus-join-boot-starter:1.5.6")
+
+    api("org.springframework.boot:spring-boot-starter-jooq")
+
+
+
+
 
 }
 
@@ -35,4 +46,32 @@ tasks.named<Jar>("jar") {
 
 tasks.test {
     useJUnitPlatform()
+}
+jooq {
+
+    executions {
+        create("adminDb") {
+            configuration {
+                logging = org.jooq.meta.jaxb.Logging.WARN
+
+                jdbc {
+                    driver = "org.postgresql.Driver"
+                    url = "jdbc:postgresql://localhost:5432/spring"
+                    user = "postgres"
+                    password = "123321"
+                }
+                generator {
+                    name = "org.jooq.codegen.KotlinGenerator"
+                    database {
+                        name = "org.jooq.meta.postgres.PostgresDatabase"
+                        inputSchema = "admin"
+                    }
+                    target {
+                        packageName = "com.example.data.generated"
+                        directory = "build/generated-sources/jooq"
+                    }
+                }
+            }
+        }
+    }
 }

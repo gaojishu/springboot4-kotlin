@@ -33,7 +33,6 @@ data class AdminQueryReq(
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     data class Sort(
-        val id: String? = null // descend 或 ascend
-        // 可以根据需要添加其他排序字段
+        val id: String? = null
     )
 }

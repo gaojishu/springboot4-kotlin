@@ -19,7 +19,7 @@ object RedisConstant {
         fun tokenKey(token: String) = "${PREFIX}token:$token"
 
         // Token 过期时间（单位：秒），例如 2 小时
-        const val TOKEN_EXPIRE_SECONDS = 7200L
+        const val TOKEN_EXPIRE_SECONDS = 72009L
 
         val TOKEN_EXPIRE_UNIT = TimeUnit.SECONDS
     }

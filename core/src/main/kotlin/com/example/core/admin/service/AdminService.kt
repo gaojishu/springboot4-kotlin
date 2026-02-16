@@ -11,12 +11,11 @@ import com.example.core.admin.dto.req.admin.AdminQueryReq
 import com.example.data.admin.entity.AdminEntity
 
 interface AdminService: IService<AdminEntity>  {
-    fun login(adminLoginReq: AdminLoginReq): AdminLoginRes
-    fun info(): AdminItemRes?
+    fun login(req: AdminLoginReq): AdminLoginRes
     fun logout()
     fun selectById(id: Long): AdminItemRes?
-    fun page(adminSearchReq: AdminQueryReq): IPage<AdminItemRes>
+    fun page(req: AdminQueryReq): IPage<AdminItemRes>
     fun deleteById(id: Long)
-    fun create(adminCreateReq: AdminCreateReq): AdminItemRes?
-    fun updateById(adminUpdateReq: AdminUpdateReq): AdminItemRes?
+    fun create(req: AdminCreateReq): Boolean
+    fun updateById(req: AdminUpdateReq): Boolean
 }

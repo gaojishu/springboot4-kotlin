@@ -20,7 +20,7 @@ class AdminUserDetailsServiceImpl(
         val admin = adminMapper.selectById(adminId) ?: throw BusinessException("用户不存在")
         // 2. 获取权限
         return LoginAdmin(
-            adminId = admin.id!!,
+            id = admin.id!!,
             permissions = admin.permissionKey,
             username = admin.username,
             password = admin.password,

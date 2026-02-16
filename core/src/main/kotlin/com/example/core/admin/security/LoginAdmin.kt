@@ -4,7 +4,7 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.User
 
 class LoginAdmin(
-    val adminId: Long,
+    val id: Long,
     val permissions: List<String>?,
     username: String,
     password: String,

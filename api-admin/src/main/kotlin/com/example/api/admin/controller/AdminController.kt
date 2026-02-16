@@ -1,9 +1,11 @@
 package com.example.api.admin.controller
 
+import com.baomidou.mybatisplus.core.metadata.IPage
 import com.example.api.admin.dto.ApiResult
-import com.example.core.admin.dto.request.admin.AdminLoginReq
-import com.example.core.admin.dto.response.admin.AdminItemRes
-import com.example.core.admin.dto.response.admin.AdminLoginRes
+import com.example.core.admin.dto.req.admin.AdminCreateReq
+import com.example.core.admin.dto.req.admin.AdminQueryReq
+import com.example.core.admin.dto.req.admin.AdminUpdateReq
+import com.example.core.admin.dto.res.admin.AdminItemRes
 import com.example.core.admin.service.AdminService
 import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,30 +17,28 @@ class AdminController{
     @Autowired
     private lateinit var adminService: AdminService
 
-    @GetMapping("/index")
-    fun index(): ApiResult<String> {
-        val thread = Thread.currentThread()
-        // 打印线程详细信息到控制台
-        println("当前线程: $thread")
-        println("是否为虚拟线程: ${thread.isVirtual}")
-
-        val info = "Name: ${thread.name}, IsVirtual: ${thread.isVirtual}"
-        return ApiResult.ok<String>().data(info)
+    @PostMapping("/page")
+    fun page(@Valid @RequestBody req: AdminQueryReq): ApiResult<IPage<AdminItemRes>> {
+        val page = adminService.page(req)
+        return ApiResult.ok<IPage<AdminItemRes>>().data(page)
     }
 
-    @GetMapping("/info")
-    fun info(): ApiResult<AdminItemRes?> {
-        val admin = adminService.info()
-        return ApiResult.ok<AdminItemRes?>().data(admin)
+    @PostMapping("/delete")
+    fun delete(id: Long): ApiResult<Unit> {
+        adminService.deleteById(id)
+        return ApiResult.ok<Unit>().message("操作成功")
     }
 
-    @PostMapping("/login")
-    fun login(@Valid @RequestBody req: AdminLoginReq): ApiResult<AdminLoginRes> {
-        val token = adminService.login(req)
+    @PostMapping("/create")
+    fun create(@RequestBody req: AdminCreateReq): ApiResult<Unit> {
+        adminService.create(req)
+        return ApiResult.ok<Unit>().message("操作成功")
+    }
 
-        return ApiResult.ok<AdminLoginRes>()
-            .message("登录成功")
-            .data(token)
+    @PostMapping("/update")
+    fun update(@RequestBody req: AdminUpdateReq): ApiResult<Unit> {
+        adminService.updateById(req)
+        return ApiResult.ok<Unit>()
     }
 
 }

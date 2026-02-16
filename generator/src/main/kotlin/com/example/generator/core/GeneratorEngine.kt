@@ -82,7 +82,9 @@ class GeneratorEngine(
         entity.columnNaming(NamingStrategy.underline_to_camel)
         entity.superClass("com.example.data.admin.entity.BaseEntity") // 设置父类的全类名
         entity.addIgnoreColumns("id", "created_at", "updated_at")
-        params.entity ?: entity.disable()
+        if(params.entity == false){
+            entity.disable()
+        }
 
         // 2.Mapper 配置
         val mapper = builder.mapperBuilder()
@@ -90,8 +92,10 @@ class GeneratorEngine(
         mapper.formatMapperFileName("%sMapper") // 如 UserMapper
         mapper.enableBaseResultMap() //xml
         mapper.superClass("com.github.yulichang.base.MPJBaseMapper")
-        params.mapper ?: mapper.disable()
-        params.mapperXml ?: mapper.disableMapperXml()
+        if (params.mapper == false){
+            mapper.disable()
+            mapper.disableMapperXml()
+        }
 
         // 3.Service 配置
         val service = builder.serviceBuilder()
@@ -100,16 +104,19 @@ class GeneratorEngine(
         service.formatServiceFileName("%sService")      // 去掉默认的 I 前缀 (如果你不喜欢 IUserService)
         service.formatServiceImplFileName("%sServiceImpl")
         service.mapperBuilder()
-        params.service ?: service.disableService()
-        params.serviceImpl ?: service.disableServiceImpl()
+        if (params.service == false){
+            service.disableService()
+            service.disableServiceImpl()
+        }
 
         // 4. Controller 配置
         val controller = builder.controllerBuilder()
         controller.template("/templates/vm/controller.kt.vm")
         controller.enableRestStyle()
         controller.formatFileName("%sController")
-
-        params.controller ?: service.disable()
+        if (params.controller == false){
+            controller.disable()
+        }
     }
 
 
