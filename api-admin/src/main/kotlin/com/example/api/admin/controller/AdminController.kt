@@ -1,6 +1,5 @@
 package com.example.api.admin.controller
 
-import com.baomidou.mybatisplus.core.metadata.IPage
 import com.example.api.admin.dto.ApiResult
 import com.example.core.admin.dto.req.admin.AdminCreateReq
 import com.example.core.admin.dto.req.admin.AdminQueryReq
@@ -9,6 +8,7 @@ import com.example.core.admin.dto.res.admin.AdminItemRes
 import com.example.core.admin.service.AdminService
 import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -18,9 +18,9 @@ class AdminController{
     private lateinit var adminService: AdminService
 
     @PostMapping("/page")
-    fun page(@Valid @RequestBody req: AdminQueryReq): ApiResult<IPage<AdminItemRes>> {
+    fun page(@Valid @RequestBody req: AdminQueryReq): ApiResult<Page<AdminItemRes>> {
         val page = adminService.page(req)
-        return ApiResult.ok<IPage<AdminItemRes>>().data(page)
+        return ApiResult.ok<Page<AdminItemRes>>().data(page)
     }
 
     @PostMapping("/delete")

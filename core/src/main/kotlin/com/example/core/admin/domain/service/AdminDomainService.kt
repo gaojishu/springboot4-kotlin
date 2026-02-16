@@ -3,7 +3,7 @@ package com.example.core.admin.domain.service
 import com.example.base.exception.BusinessException
 import com.example.core.admin.domain.model.verifyIsDisabled
 import com.example.core.admin.domain.model.verifyPassword
-import com.example.data.admin.entity.AdminEntity
+import com.example.data.generated.admin.tables.records.AdminRecord
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Component
 
@@ -46,7 +46,7 @@ class AdminDomainService(
     /**
      * 验证登录模型（聚合校验）
      */
-    fun verifyLogin(admin: AdminEntity,rawPassword: String) {
+    fun verifyLogin(admin: AdminRecord,rawPassword: String) {
 
         //1. 密码校验
         admin.verifyPassword(rawPassword, passwordEncoder)

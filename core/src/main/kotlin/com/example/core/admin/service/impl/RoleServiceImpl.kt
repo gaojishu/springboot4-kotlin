@@ -1,16 +1,13 @@
 package com.example.core.admin.service.impl
 
-import com.baomidou.mybatisplus.extension.kotlin.KtQueryWrapper
 import com.example.base.exception.BusinessException
-import com.example.core.admin.converter.RoleConverter
 import com.example.core.admin.dto.req.role.RoleCreateReq
 import com.example.core.admin.dto.req.role.RoleUpdateReq
 import com.example.core.admin.dto.res.role.RoleItemRes
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.core.admin.service.RoleService
-import org.springframework.stereotype.Service;
-import com.example.data.admin.mapper.RoleMapper
-import com.example.data.admin.entity.RoleEntity
+import com.example.data.generated.admin.tables.references.ROLE
+import org.jooq.DSLContext
+import org.springframework.stereotype.Service
 
 /**
  * @author xkl
@@ -18,44 +15,37 @@ import com.example.data.admin.entity.RoleEntity
  */
 @Service
 class RoleServiceImpl(
-): ServiceImpl<RoleMapper, RoleEntity>(), RoleService {
+    private val dsl: DSLContext
+): RoleService {
     override fun getAll(): List<RoleItemRes> {
-        val list = baseMapper.selectList(
-            KtQueryWrapper(RoleEntity::class.java)
-                .orderByAsc(RoleEntity::id)
-        )
+        val res = dsl.selectFrom(ROLE).fetchInto(RoleItemRes::class.java)
 
-        return list.map { RoleConverter.INSTANCE.toRes(it) }
+        return res
     }
 
-    override fun create(req: RoleCreateReq): RoleItemRes {
-        val entity = RoleEntity()
-        entity.name = req.name
-        entity.remark = req.remark
-        entity.permissionKey = req.permissionKey
-        baseMapper.insert(entity)
-        return RoleConverter.INSTANCE.toRes(entity)
+    override fun create(req: RoleCreateReq): RoleItemRes? {
+        val res = dsl.insertInto(ROLE)
+            .set(ROLE.NAME, req.name)
+            .set(ROLE.REMARK, req.remark)
+            .set(ROLE.PERMISSION_KEY, req.permissionKey)
+            .returning()
+            .fetchOneInto(RoleItemRes::class.java)
+        return res
     }
 
     override fun updateById(req: RoleUpdateReq): RoleItemRes {
-        val entity = baseMapper.selectById(req.id)
-        if (entity == null) {
-            throw BusinessException("角色不存在")
-        }
-        this.ktUpdate()
-            .eq(RoleEntity::id, req.id)
-            .set(RoleEntity::name, req.name)
-            .set(RoleEntity::remark, req.remark)
-            .set(RoleEntity::permissionKey, req.permissionKey)
-            .update()
-        return RoleConverter.INSTANCE.toRes(entity)
+        val record = dsl.fetchOne(ROLE, ROLE.ID.eq(req.id))?: throw BusinessException("模板不存在")
+
+        record.name = req.name
+        record.remark = req.remark
+        record.permissionKey = req.permissionKey
+        record.store()
+
+        return record.into(RoleItemRes::class.java)
     }
 
     override fun deleteById(id: Long): Boolean {
-        val entity = baseMapper.selectById(id)
-        if (entity == null) {
-            throw BusinessException("角色不存在")
-        }
-        return baseMapper.deleteById(id) > 0
+        val record = dsl.fetchOne(ROLE, ROLE.ID.eq(id)) ?: throw BusinessException("模板不存在")
+        return record.delete() > 0
     }
 }

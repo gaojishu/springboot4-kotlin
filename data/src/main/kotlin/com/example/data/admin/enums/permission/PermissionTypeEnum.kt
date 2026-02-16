@@ -1,11 +1,10 @@
 package com.example.data.admin.enums.permission
 
-import com.baomidou.mybatisplus.annotation.EnumValue
 import com.example.base.dto.ValueLabel
 
 enum class PermissionTypeEnum(
-    @EnumValue val value: Int, // 告诉 MyBatis-Plus：存这个值到数据库
-    val label: String // @JsonValue告诉 Jackson：返回 JSON 时显示这个文字
+    val value: Short,
+    val label: String
 ){
     MENU_PERMISSION(1, "菜单权限"),
     OPERATION_PERMISSION(2, "操作权限");
@@ -13,7 +12,7 @@ enum class PermissionTypeEnum(
     companion object {
         private val map = entries.associateBy { it.value }
 
-        fun fromValue(value: Int): PermissionTypeEnum {
+        fun fromValue(value: Short): PermissionTypeEnum {
             return map[value] ?: MENU_PERMISSION
         }
 

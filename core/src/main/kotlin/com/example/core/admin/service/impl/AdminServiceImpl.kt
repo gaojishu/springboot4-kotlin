@@ -7,20 +7,22 @@ import com.example.core.admin.dto.res.admin.AdminLoginRes
 import com.example.core.admin.service.AdminService
 import com.example.core.admin.service.TokenService
 import org.springframework.stereotype.Service
-import com.example.data.admin.mapper.AdminMapper
-import com.example.data.admin.entity.AdminEntity
-import com.baomidou.mybatisplus.extension.kotlin.KtQueryWrapper
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
 import com.example.base.exception.BusinessException
-import com.example.core.admin.converter.AdminConverter
 import com.example.core.admin.dto.req.admin.AdminCreateReq
 import com.example.core.admin.dto.req.admin.AdminUpdateReq
 import com.example.core.admin.dto.req.admin.AdminQueryReq
 import com.example.core.admin.dto.res.admin.AdminItemRes
 import org.springframework.security.core.context.SecurityContextHolder
-import com.baomidou.mybatisplus.core.metadata.IPage
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page
+import com.example.core.extension.paginate
+import com.example.data.admin.enums.SortEnum
+import com.example.data.generated.admin.tables.references.ADMIN_
+import org.jooq.Condition
+import org.jooq.DSLContext
+import org.jooq.SortField
+import org.jooq.impl.DSL
+import org.springframework.data.domain.PageRequest
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.data.domain.Page
 
 @Service
 class AdminServiceImpl(
@@ -28,38 +30,71 @@ class AdminServiceImpl(
     private val adminDomainService: AdminDomainService,
     private val captchaDomainService: CaptchaDomainService,
     private val passwordEncoder: PasswordEncoder,
-): ServiceImpl<AdminMapper, AdminEntity>(),AdminService {
-    private fun buildWrapper(req: AdminQueryReq): KtQueryWrapper<AdminEntity> {
-        val params = req.params
-        val sort = req.sort
+    private val dsl: DSLContext
+): AdminService {
 
-        val wrapper = KtQueryWrapper(AdminEntity::class.java)
-            .like(params.username != null, AdminEntity::username, params.username)
-            .like(params.mobile != null, AdminEntity::mobile, params.mobile)
-            .like(params.email != null, AdminEntity::email, params.email)
-            .like(params.nickname != null, AdminEntity::nickname, params.nickname)
-            .eq(params.disabledStatus != null, AdminEntity::disabledStatus, params.disabledStatus)
+    private fun buildCondition(params: AdminQueryReq.Params): Condition {
 
-        wrapper.orderBy(true,sort?.id == "ascend",AdminEntity::id)
+        var condition = DSL.noCondition()
 
-        return wrapper
+        params.username?.let {
+            condition = condition.and(ADMIN_.USERNAME.contains(it))
+        }
+        params.mobile?.let {
+            condition = condition.and(ADMIN_.MOBILE.contains(it))
+        }
+        params.email?.let {
+            condition = condition.and(ADMIN_.EMAIL.contains(it))
+        }
+
+        params.disabledStatus?.let {
+            condition = condition.and(ADMIN_.DISABLED_STATUS.eq(it))
+        }
+        params.nickname?.let {
+            condition = condition.and(ADMIN_.NICKNAME.contains(it))
+        }
+
+        return condition
     }
 
-    override fun page(req: AdminQueryReq): IPage<AdminItemRes> {
-        val page = Page<AdminEntity>(
-            req.params.current,
-            req.params.pageSize
-        )
-        val buildWrapper = buildWrapper(req)
-        val wrapper = baseMapper.selectPage(page, buildWrapper)
+    private fun buildOrderBy(sort: AdminQueryReq.Sort?): List<SortField<*>> {
+        val sortFields = mutableListOf<SortField<*>>()
 
-        return wrapper.convert { AdminConverter.INSTANCE.toRes(it) }
+        if(sort?.id == null){
+            sortFields.add(ADMIN_.ID.desc())
+        }else{
+            sortFields.add(if (sort.id == SortEnum.ASCEND) ADMIN_.ID.asc() else ADMIN_.ID.desc())
+        }
+
+
+        return sortFields
+    }
+
+    override fun page(req: AdminQueryReq): Page<AdminItemRes> {
+        val pageable = PageRequest.of(req.params.current - 1, req.params.pageSize)
+        val condition = buildCondition(req.params)
+        val res = dsl.paginate(
+            countTable = ADMIN_,
+            condition = condition,
+            pageable = pageable,
+        ) {
+            context ->
+            context.select(ADMIN_)
+            .from(ADMIN_)
+            .where(condition)
+            .orderBy(buildOrderBy(req.sort))
+        }
+        return res.map { record ->
+            record.into(AdminItemRes::class.java)
+        }
     }
     /**
      * 删除
      */
     override fun deleteById(id: Long) {
-        baseMapper.deleteById(id)
+        dsl.deleteFrom(ADMIN_)
+            .where(ADMIN_.ID.eq(id))
+            .execute()
     }
     /**
      * 创建
@@ -69,15 +104,16 @@ class AdminServiceImpl(
             req.username,
             req.password
         )
-        val admin = AdminEntity().apply {
-            username = req.username
-            password = passwordEncoder.encode(req.password).toString()
-            mobile = req.mobile
-            email = req.email
-            nickname = req.nickname
-            disabledStatus = req.disabledStatus
-        }
-        val res = baseMapper.insert(admin)
+        val res = dsl.insertInto(ADMIN_)
+            .set(ADMIN_.USERNAME, req.username)
+            .set(ADMIN_.MOBILE, req.password)
+            .set(ADMIN_.DISABLED_STATUS, req.disabledStatus)
+            .set(ADMIN_.PASSWORD, passwordEncoder.encode(req.password).toString())
+            .set(ADMIN_.EMAIL, req.email)
+            .set(ADMIN_.NICKNAME, req.nickname)
+            .set(ADMIN_.PERMISSION_KEY, req.permissionKey)
+            .execute()
+
         return res > 0
     }
 
@@ -94,53 +130,59 @@ class AdminServiceImpl(
             )
         }
 
-      val entity =  this.ktUpdate().apply {
-            eq(AdminEntity::id, req.id)
-            set(req.username != null, AdminEntity::username, req.username)
-            set(req.password != null, AdminEntity::password, passwordEncoder.encode(req.password).toString())
-            set(req.disabledStatus != null, AdminEntity::disabledStatus, req.disabledStatus)
-            set(AdminEntity::mobile, req.mobile)
-            set(AdminEntity::email, req.email)
-            set(AdminEntity::nickname, req.nickname)
-            set(AdminEntity::permissionKey, req.permissionKey)
-        }.update()
-        return entity
+        val record = dsl.fetchOne(ADMIN_, ADMIN_.ID.eq(req.id)) ?: throw BusinessException("用户不存在")
+
+        req.username?.let {
+            record.username = it
+        }
+
+        req.password?.let {
+            record.set(ADMIN_.PASSWORD, passwordEncoder.encode(it).toString())
+        }
+        req.disabledStatus?.let {
+            record.set(ADMIN_.DISABLED_STATUS, it)
+        }
+        record.set(ADMIN_.EMAIL, req.email)
+        record.set(ADMIN_.NICKNAME, req.nickname)
+        record.set(ADMIN_.PERMISSION_KEY, req.permissionKey)
+
+        val res = record.store()
+
+        return res > 0
     }
 
     override fun logout() {
         SecurityContextHolder.clearContext()
     }
+
     override fun selectById(id: Long): AdminItemRes? {
-        val admin = baseMapper.selectById(id)
-        return admin?.let { AdminConverter.INSTANCE.toRes(admin) }
+        val record = dsl.fetchOne(ADMIN_, ADMIN_.ID.eq(id)) ?: throw BusinessException("用户不存在")
+
+        return record.map {
+            record ->
+            record.into(AdminItemRes::class.java)
+        }
     }
 
 
-    override fun login(adminLoginReq: AdminLoginReq): AdminLoginRes {
+    override fun login(req: AdminLoginReq): AdminLoginRes {
         // 1. 验证码校验
         captchaDomainService.validateAndConsume(
-            inputCode = adminLoginReq.captchaCode!!,
-            uuid = adminLoginReq.captchaUuid!!
+            inputCode = req.captchaCode!!,
+            uuid = req.captchaUuid!!
         )
 
         adminDomainService.validateUsernameAndPasswordFormat(
-            adminLoginReq.username!!,
-            adminLoginReq.password!!
+            req.username!!,
+            req.password!!
         )
 
-        val admin = baseMapper.selectOne(
-            KtQueryWrapper(AdminEntity::class.java)
-                .eq(AdminEntity::username, adminLoginReq.username)
-        )
-
-        if (admin == null) {
-            throw BusinessException("用户不存在")
-        }
+        val record = dsl.fetchOne(ADMIN_, ADMIN_.USERNAME.eq(req.username)) ?: throw BusinessException("用户不存在")
 
         // 2. 登录校验
-        adminDomainService.verifyLogin(admin, adminLoginReq.password)
+        adminDomainService.verifyLogin(record, req.password)
 
-        return tokenService.createToken(admin.id!!)
+        return tokenService.createToken(record.id!!)
     }
 
 }
