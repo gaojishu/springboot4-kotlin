@@ -2,6 +2,7 @@ plugins {
     `java-library` // 必须添加这个插件才能使用 api 关键字
     id("jooq-conventions")
 }
+//扫描jooq 生成的po
 sourceSets.main {
     kotlin.srcDir("build/generated-sources/jooq")
 }
@@ -13,14 +14,11 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    api("org.springframework.boot:spring-boot-starter-data-redis")
 
     api("org.springframework.boot:spring-boot-starter-jooq")
 
-    //jooq 生成po
+    // jOOQ 代码生成器的运行环境提供数据库驱动
     jooqCodegen("org.postgresql:postgresql")
-
-
 }
 
 // --- 打包配置：防止生成无法引用的可执行 Jar ---

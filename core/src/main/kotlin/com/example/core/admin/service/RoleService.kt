@@ -12,5 +12,5 @@ interface RoleService{
     fun getAll(): List<RoleItemRes>
     fun create(req: RoleCreateReq): RoleItemRes?
     fun updateById(req: RoleUpdateReq): RoleItemRes
-    fun deleteById(id: Long): Boolean
+    fun deleteById(id: Long)
 }

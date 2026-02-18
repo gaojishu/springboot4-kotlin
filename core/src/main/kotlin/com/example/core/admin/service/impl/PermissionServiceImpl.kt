@@ -6,6 +6,7 @@ import com.example.core.admin.dto.req.permission.PermissionUpdateReq
 import com.example.core.admin.dto.res.admin.AdminItemRes
 import com.example.core.admin.dto.res.permission.PermissionItemRes
 import com.example.core.admin.service.PermissionService
+import com.example.data.generated.admin.tables.records.PermissionRecord
 import org.springframework.stereotype.Service
 import com.example.data.generated.admin.tables.references.ADMIN_
 import com.example.data.generated.admin.tables.references.ADMIN_PERMISSION
@@ -13,6 +14,7 @@ import com.example.data.generated.admin.tables.references.PERMISSION
 import org.jooq.DSLContext
 import org.jooq.impl.DSL.multiset
 import org.jooq.impl.DSL.select
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * @author xkl
@@ -49,36 +51,26 @@ class PermissionServiceImpl(
             admin?.let { records = it.permission }
         }
 
-
-
-
         return records
     }
 
     override fun getAll(): List<PermissionItemRes> {
         val records = dsl.selectFrom(PERMISSION)
+            .orderBy(PERMISSION.SORT.asc())
             .fetchInto(PermissionItemRes::class.java)
 
         return records
     }
 
-    override fun create(req: PermissionCreateReq): Boolean {
-        val res = dsl.insertInto(PERMISSION)
-            .set(PERMISSION.ICON, req.icon)
-            .set(PERMISSION.NAME, req.name)
-            .set(PERMISSION.PARENT_ID, req.parentId)
-            .set(PERMISSION.PATH, req.path)
-            .set(PERMISSION.REMARK, req.remark)
-            .set(PERMISSION.SORT, req.sort)
-            .set(PERMISSION.TYPE, req.type)
-            .set(PERMISSION.CODE, req.code)
-            .execute()
-        return res > 0
-    }
+    @Transactional(rollbackFor = [Exception::class])
+    override fun create(req: PermissionCreateReq) {
 
-    override fun updateById(req: PermissionUpdateReq): Boolean {
-        val record = dsl.fetchOne(PERMISSION)?:throw BusinessException("权限不存在")
+        var parent: PermissionRecord? = null
+        if (req.parentId != null) {
+            parent = dsl.fetchOne(PERMISSION, PERMISSION.ID.eq(req.parentId))
+        }
 
+        val record = dsl.newRecord(PERMISSION)
         record.icon = req.icon
         record.name = req.name
         record.parentId = req.parentId
@@ -87,13 +79,36 @@ class PermissionServiceImpl(
         record.sort = req.sort
         record.type = req.type
         record.code = req.code
+        record.level = parent?.level?.plus(1) ?: 1
+        record.store()
 
-        val res = record.store()
+        val newId = record.id!!
+        record.key = parent?.key?.let { "$it-$newId" } ?: newId.toString()
 
-        return res > 0
+        record.store()
     }
 
-    override fun deleteById(id: Long): Boolean {
+    override fun updateById(req: PermissionUpdateReq) {
+        var parent: PermissionRecord? = null
+        if (req.parentId != null) {
+            parent = dsl.fetchOne(PERMISSION, PERMISSION.ID.eq(req.parentId))
+        }
+        val record = dsl.fetchOne(PERMISSION, PERMISSION.ID.eq(req.id))?:throw BusinessException("权限不存在")
+        record.icon = req.icon
+        record.name = req.name
+        record.parentId = req.parentId
+        record.path = req.path
+        record.remark = req.remark
+        record.sort = req.sort
+        record.type = req.type
+        record.code = req.code
+        record.level = parent?.level?.plus(1) ?: 1
+        record.key = parent?.key?.let { "$it-${record.id}" } ?: record.id.toString()
+
+        record.store()
+    }
+
+    override fun deleteById(id: Long) {
         val record = dsl.fetchOne(PERMISSION, PERMISSION.ID.eq(id))?: throw BusinessException("权限不存在")
 
         val child = dsl.fetchOne(PERMISSION, PERMISSION.PARENT_ID.eq(id))
@@ -101,7 +116,6 @@ class PermissionServiceImpl(
         if (child != null) {
             throw BusinessException("请先删除子权限")
         }
-        val res = record.delete()
-        return res > 0
+        record.delete()
     }
 }

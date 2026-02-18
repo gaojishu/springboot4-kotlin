@@ -10,8 +10,8 @@ import com.example.core.admin.dto.res.permission.PermissionItemRes
  */
 interface PermissionService{
     fun getAll(): List<PermissionItemRes>
-    fun create(req: PermissionCreateReq): Boolean
-    fun updateById(req: PermissionUpdateReq): Boolean
-    fun deleteById(id: Long): Boolean
+    fun create(req: PermissionCreateReq)
+    fun updateById(req: PermissionUpdateReq)
+    fun deleteById(id: Long)
     fun selectByAdminId(adminId: Long): List<PermissionItemRes>
 }

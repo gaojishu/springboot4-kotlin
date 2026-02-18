@@ -11,10 +11,9 @@ class Jackson3Config {
 
     @Bean
     fun objectMapper(): JsonMapperBuilderCustomizer {
-
-        val module = SimpleModule()
-        module.addDeserializer(String::class.java, EmptyStringToNull())
         val b = JsonMapperBuilderCustomizer{ builder->
+            val module = SimpleModule()
+            module.addDeserializer(String::class.java, EmptyStringToNull())
             builder.addModules(module)
         }
         return b

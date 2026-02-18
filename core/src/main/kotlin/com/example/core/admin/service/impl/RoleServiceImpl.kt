@@ -44,8 +44,8 @@ class RoleServiceImpl(
         return record.into(RoleItemRes::class.java)
     }
 
-    override fun deleteById(id: Long): Boolean {
+    override fun deleteById(id: Long) {
         val record = dsl.fetchOne(ROLE, ROLE.ID.eq(id)) ?: throw BusinessException("模板不存在")
-        return record.delete() > 0
+        record.delete()
     }
 }

@@ -4,7 +4,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication(
-    scanBasePackages = [ "com.example.api.admin","com.example.core", "com.example.data"]
+    scanBasePackages = [ "com.example.api.admin","com.example.core", "com.example.data", "com.example.base"]
 )
 class AdminApplication
 

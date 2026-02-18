@@ -11,8 +11,6 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-security")
     api("org.springframework.boot:spring-boot-starter-validation")
 
-    // Source: https://mvnrepository.com/artifact/cn.hutool/hutool-captcha
-    implementation("cn.hutool:hutool-captcha:5.8.43")
 
     // Source: https://mvnrepository.com/artifact/org.mapstruct/mapstruct
     implementation("org.mapstruct:mapstruct:1.6.3")

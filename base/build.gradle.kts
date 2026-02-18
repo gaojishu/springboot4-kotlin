@@ -9,6 +9,16 @@ dependencies {
 
     // Source: https://mvnrepository.com/artifact/tools.jackson.datatype/jackson-datatype-jsr310
     api("tools.jackson.datatype:jackson-datatype-jsr310:3.0.0-rc2")
+
+    api("org.springframework.boot:spring-boot-starter-data-redis")
+
+    // Source: https://mvnrepository.com/artifact/cn.hutool/hutool-captcha
+    implementation("cn.hutool:hutool-captcha:5.8.43")
+
+    // Source: https://mvnrepository.com/artifact/com.aliyun.oss/aliyun-sdk-oss
+    implementation("com.aliyun.oss:aliyun-sdk-oss:3.18.5")
+
+
 }
 
 // --- 打包配置：防止生成无法引用的可执行 Jar ---

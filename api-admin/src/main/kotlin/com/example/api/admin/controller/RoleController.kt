@@ -26,7 +26,7 @@ class RoleController{
         return ApiResult.ok<RoleItemRes>().data(res).message("更新成功")
     }
 
-    @PostMapping("/delete")
+    @GetMapping("/delete")
     fun delete(@RequestParam id: Long): ApiResult<Unit> {
         roleService.deleteById(id)
         return ApiResult.ok<Unit>().message("删除成功")

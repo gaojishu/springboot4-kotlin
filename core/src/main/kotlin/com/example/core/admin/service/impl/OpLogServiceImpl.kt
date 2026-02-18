@@ -65,10 +65,10 @@ class OpLogServiceImpl(
     private fun buildOrderBy(sort: OpLogQueryReq.Sort?): List<SortField<*>> {
         val sortFields = mutableListOf<SortField<*>>()
 
-        // 1. 处理 ID 排序
-        sort?.id?.let { order ->
-            val field = OP_LOG.ID
-            sortFields.add(if (order == SortEnum.ASCEND) field.asc() else field.desc())
+        if(sort?.id == null){
+            sortFields.add(OP_LOG.ID.desc())
+        }else{
+            sortFields.add(if (sort.id == SortEnum.ASCEND) OP_LOG.ID.asc() else OP_LOG.ID.desc())
         }
 
         return sortFields

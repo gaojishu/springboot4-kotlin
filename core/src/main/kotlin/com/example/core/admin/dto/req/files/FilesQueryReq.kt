@@ -1,13 +1,13 @@
-package com.example.core.admin.dto.req.admin
+package com.example.core.admin.dto.req.files
 
 import com.example.data.admin.enums.SortEnum
-import com.example.data.admin.enums.admin.AdminDisabledStatusEnum
+import com.example.data.admin.enums.files.FilesTypeEnum
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import jakarta.validation.Valid
 import jakarta.validation.constraints.*
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class AdminQueryReq(
+data class FilesQueryReq(
     @field:Valid
     val params: Params,
 
@@ -24,14 +24,10 @@ data class AdminQueryReq(
         @field:Min(value = 1, message = "每页大小必须大于等于1")
         @field:Max(value = 100, message = "每页大小不能大于100")
         val pageSize: Int = 10,
-
-        val username: String? = null,
-        val mobile: String? = null,
-        val email: String? = null,
-        val nickname: String? = null,
-        val disabledStatus: AdminDisabledStatusEnum? = null,
-        val createdAt: List<String>? = null,
-        val updatedAt: List<String>? = null
+        val name: String? = null,
+        val categoryId: Long? = null,
+        val type: FilesTypeEnum? = null,
+        val createdAt: List<String>? = null
     )
 
     @JsonIgnoreProperties(ignoreUnknown = true)

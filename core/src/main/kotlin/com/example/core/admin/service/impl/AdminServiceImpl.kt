@@ -1,13 +1,13 @@
 package com.example.core.admin.service.impl
 
-import com.example.core.admin.domain.service.CaptchaDomainService
 import com.example.core.admin.domain.service.AdminDomainService
 import com.example.core.admin.dto.req.admin.AdminLoginReq
 import com.example.core.admin.dto.res.admin.AdminLoginRes
 import com.example.core.admin.service.AdminService
-import com.example.core.admin.service.TokenService
 import org.springframework.stereotype.Service
 import com.example.base.exception.BusinessException
+import com.example.base.provider.captcha.CaptchaProvider
+import com.example.base.provider.token.TokenProvider
 import com.example.core.admin.dto.req.admin.AdminCreateReq
 import com.example.core.admin.dto.req.admin.AdminUpdateReq
 import com.example.core.admin.dto.req.admin.AdminQueryReq
@@ -23,12 +23,14 @@ import org.jooq.impl.DSL
 import org.springframework.data.domain.PageRequest
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.data.domain.Page
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Service
 class AdminServiceImpl(
-    private val tokenService: TokenService,
+    private val tokenProvider: TokenProvider,
     private val adminDomainService: AdminDomainService,
-    private val captchaDomainService: CaptchaDomainService,
+    private val captchaProvider: CaptchaProvider,
     private val passwordEncoder: PasswordEncoder,
     private val dsl: DSLContext
 ): AdminService {
@@ -52,6 +54,26 @@ class AdminServiceImpl(
         }
         params.nickname?.let {
             condition = condition.and(ADMIN_.NICKNAME.contains(it))
+        }
+        params.createdAt?.takeIf { it.size == 2 }?.let { range ->
+            val startTime = range[0]
+            val endTime = range[1]
+            if (startTime.isNotBlank() && endTime.isNotBlank()) {
+                condition = condition.and(ADMIN_.CREATED_AT.between(
+                    LocalDateTime.parse(startTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                    LocalDateTime.parse(endTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                ))
+            }
+        }
+        params.updatedAt?.takeIf { it.size == 2 }?.let { range ->
+            val startTime = range[0]
+            val endTime = range[1]
+            if (startTime.isNotBlank() && endTime.isNotBlank()) {
+                condition = condition.and(ADMIN_.UPDATED_AT.between(
+                    LocalDateTime.parse(startTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                    LocalDateTime.parse(endTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                ))
+            }
         }
 
         return condition
@@ -99,25 +121,23 @@ class AdminServiceImpl(
     /**
      * 创建
      */
-    override fun create(req: AdminCreateReq): Boolean {
+    override fun create(req: AdminCreateReq) {
         adminDomainService.validateUsernameAndPasswordFormat(
             req.username,
             req.password
         )
-        val res = dsl.insertInto(ADMIN_)
+        dsl.insertInto(ADMIN_)
             .set(ADMIN_.USERNAME, req.username)
-            .set(ADMIN_.MOBILE, req.password)
+            .set(ADMIN_.MOBILE, req.mobile)
             .set(ADMIN_.DISABLED_STATUS, req.disabledStatus)
             .set(ADMIN_.PASSWORD, passwordEncoder.encode(req.password).toString())
             .set(ADMIN_.EMAIL, req.email)
             .set(ADMIN_.NICKNAME, req.nickname)
             .set(ADMIN_.PERMISSION_KEY, req.permissionKey)
             .execute()
-
-        return res > 0
     }
 
-    override fun updateById(req: AdminUpdateReq): Boolean {
+    override fun updateById(req: AdminUpdateReq) {
 
         req.username?.let {
             adminDomainService.validateUsernameFormat(
@@ -137,21 +157,34 @@ class AdminServiceImpl(
         }
 
         req.password?.let {
-            record.set(ADMIN_.PASSWORD, passwordEncoder.encode(it).toString())
+            record.password = passwordEncoder.encode(it)
         }
         req.disabledStatus?.let {
-            record.set(ADMIN_.DISABLED_STATUS, it)
+            record.disabledStatus = it
         }
-        record.set(ADMIN_.EMAIL, req.email)
-        record.set(ADMIN_.NICKNAME, req.nickname)
-        record.set(ADMIN_.PERMISSION_KEY, req.permissionKey)
+        req.mobile?.let {
+            record.mobile = it
+        }
+        req.email?.let {
+            record.email = it
+        }
+        req.nickname?.let {
+            record.nickname = it
+        }
+        req.permissionKey?.let {
+            record.permissionKey = it
+        }
 
-        val res = record.store()
-
-        return res > 0
+        record.store()
     }
 
     override fun logout() {
+        val auth = SecurityContextHolder.getContext().authentication
+        val token = auth?.credentials as? String
+        if (token != null) {
+            tokenProvider.deleteToken(token)
+        }
+        // 清除当前线程的认证信息
         SecurityContextHolder.clearContext()
     }
 
@@ -167,10 +200,7 @@ class AdminServiceImpl(
 
     override fun login(req: AdminLoginReq): AdminLoginRes {
         // 1. 验证码校验
-        captchaDomainService.validateAndConsume(
-            inputCode = req.captchaCode!!,
-            uuid = req.captchaUuid!!
-        )
+        captchaProvider.validateAndConsume(req.captchaCode!!, req.captchaUuid!!)
 
         adminDomainService.validateUsernameAndPasswordFormat(
             req.username!!,
@@ -182,7 +212,14 @@ class AdminServiceImpl(
         // 2. 登录校验
         adminDomainService.verifyLogin(record, req.password)
 
-        return tokenService.createToken(record.id!!)
+        val token = tokenProvider.createToken(record.id!!)
+
+        return AdminLoginRes(
+            token = token.token,
+            expiredAt = token.expiredAt,
+            header = "Authorization",
+            prefix = "Bearer",
+        )
     }
 
 }

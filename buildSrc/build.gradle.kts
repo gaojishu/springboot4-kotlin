@@ -15,6 +15,6 @@ dependencies {
     implementation("org.jooq:jooq-codegen:3.19.30")
     implementation("org.jooq:jooq-meta:3.19.30")
 
-    // 如果你使用的是官方插件，也可以直接引入插件包
+    // 生成器官方插件
     implementation("org.jooq:jooq-codegen-gradle:3.19.30")
 }

@@ -1,6 +1,6 @@
 package com.example.api.admin.security
 
-import com.example.core.admin.service.TokenService
+import com.example.base.provider.token.TokenProvider
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -16,7 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter
 @Component
 class AuthFilter(
     @Autowired private val userDetailsService: UserDetailsService,
-    @Autowired private val tokenService: TokenService,
+    @Autowired private val tokenProvider: TokenProvider,
 ) : OncePerRequestFilter() {
 
     override fun doFilterInternal(
@@ -31,18 +31,16 @@ class AuthFilter(
         if (token.isNullOrBlank()) {
             token = request.getParameter("token")?.trim()
         }
-        println("token: $token")
 
         if (!token.isNullOrEmpty()){
 
             try {
-                // 1. 获取并校验 ID (内部已触发 TokenDomainService.validate)
-                val adminId = tokenService.getAdminIdByToken(token)
+                val adminId = tokenProvider.getIdByToken(token)
 
                 val userDetails: UserDetails = userDetailsService.loadUserByUsername(adminId.toString())
 
                 val authentication = UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.authorities
+                    userDetails, token, userDetails.authorities
                 )
                 authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
                 SecurityContextHolder.getContext().authentication = authentication

@@ -14,6 +14,6 @@ interface AdminService {
     fun selectById(id: Long): AdminItemRes?
     fun page(req: AdminQueryReq): Page<AdminItemRes>
     fun deleteById(id: Long)
-    fun create(req: AdminCreateReq): Boolean
-    fun updateById(req: AdminUpdateReq): Boolean
+    fun create(req: AdminCreateReq)
+    fun updateById(req: AdminUpdateReq)
 }

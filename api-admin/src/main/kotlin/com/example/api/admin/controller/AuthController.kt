@@ -39,8 +39,9 @@ class AuthController{
     }
 
     @GetMapping("/logout")
-    fun logout() {
+    fun logout(): ApiResult<Unit> {
         adminService.logout()
+         return ApiResult.ok<Unit>().message("退出成功")
     }
 
     @GetMapping("/permission")
