@@ -13,7 +13,7 @@ import com.example.core.admin.dto.req.admin.AdminUpdateReq
 import com.example.core.admin.dto.req.admin.AdminQueryReq
 import com.example.core.admin.dto.res.admin.AdminItemRes
 import org.springframework.security.core.context.SecurityContextHolder
-import com.example.core.extension.paginate
+import com.example.data.extension.paginate
 import com.example.data.admin.enums.SortEnum
 import com.example.data.generated.admin.tables.references.ADMIN_
 import org.jooq.Condition
@@ -186,6 +186,15 @@ class AdminServiceImpl(
         }
         // 清除当前线程的认证信息
         SecurityContextHolder.clearContext()
+    }
+
+    override fun selectByUsername(username: String): AdminItemRes {
+        val record = dsl.fetchOne(ADMIN_, ADMIN_.USERNAME.eq(username)) ?: throw BusinessException("用户不存在")
+
+        return record.map {
+            record ->
+            record.into(AdminItemRes::class.java)
+        }
     }
 
     override fun selectById(id: Long): AdminItemRes? {

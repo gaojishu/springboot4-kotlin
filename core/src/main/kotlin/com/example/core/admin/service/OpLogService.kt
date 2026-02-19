@@ -11,4 +11,14 @@ import org.springframework.data.domain.Page
 interface OpLogService{
     fun page(req: OpLogQueryReq): Page<OpLogItemRes>
     fun export(req: OpLogQueryReq): Long
+    fun create(
+        adminId: Long?,
+        ip: String?,
+        method: String?,
+        remark: String?,
+        duration: Long,
+        uri: String?,
+        params: String?,
+        queryParams: String?
+    )
 }

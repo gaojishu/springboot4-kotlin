@@ -1,9 +1,11 @@
 package com.example.base.config
 
 import org.springframework.boot.task.SimpleAsyncTaskExecutorBuilder
+import org.springframework.boot.task.SimpleAsyncTaskSchedulerBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.task.TaskExecutor
+import org.springframework.scheduling.TaskScheduler
 import org.springframework.scheduling.annotation.AsyncConfigurer
 import org.springframework.scheduling.annotation.EnableAsync
 import java.util.concurrent.Executor
@@ -11,6 +13,14 @@ import java.util.concurrent.Executor
 @Configuration
 @EnableAsync
 class VirtualThreadConfig : AsyncConfigurer {
+
+    @Bean
+    fun webSocketTaskScheduler(): TaskScheduler {
+        return SimpleAsyncTaskSchedulerBuilder()
+            .threadNamePrefix("websocket-async-")
+            .virtualThreads(true)
+            .build()
+    }
 
     /**
      * 1. 虚拟线程执行器 - 用于 @Async 方法

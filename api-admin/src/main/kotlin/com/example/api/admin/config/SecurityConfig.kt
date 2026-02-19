@@ -31,6 +31,7 @@ class SecurityConfig(
             "/auth/login",
             "/auth/index",
             "/common/**",
+            "/ws/**"
         )
         http.csrf { it.disable() }//禁用csrf
         http.cors {
@@ -57,7 +58,6 @@ class SecurityConfig(
         return http.build()
     }
 
-    @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()
         configuration.allowedOrigins = listOf("http://localhost:3000")

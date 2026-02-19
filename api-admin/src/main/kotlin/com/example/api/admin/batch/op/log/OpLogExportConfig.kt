@@ -1,7 +1,7 @@
 package com.example.api.admin.batch.op.log
 
 import com.example.api.admin.batch.ExcelStreamingItemWriter
-import com.example.api.admin.batch.ExportUploadListener
+import com.example.api.admin.batch.ExportListener
 import com.example.api.admin.batch.JooqStreamingItemReader
 import com.example.core.admin.dto.bo.op.log.OpLogQueryBO
 import com.example.core.admin.dto.res.op.log.OpLogItemRes
@@ -34,12 +34,12 @@ class OpLogExportConfig(
     @Bean
     fun opLogExportJob(
         opLogExportStep: Step,
-        exportUploadListener: ExportUploadListener,
+        exportListener: ExportListener,
     ): Job {
         return JobBuilder("opLogExportJob", jobRepository)
             //.incrementer(RunIdIncrementer()) //RunIdIncrementer 会复用老参数
             .start(opLogExportStep)
-            .listener(exportUploadListener)
+            .listener(exportListener)
             .build()
     }
 
@@ -62,9 +62,6 @@ class OpLogExportConfig(
         dsl: DSLContext,
         @Value("#{jobParameters[opLogQueryBO]}") queryJson: String?,
     ): JooqStreamingItemReader<OpLogRecord, OpLogItemRes> {
-        val threadName = Thread.currentThread().name
-
-println("opLogReader threadName>>> $threadName")
         // 解析 DTO
         val queryBO = objectMapper.readValue(queryJson, OpLogQueryBO::class.java)
 
@@ -87,7 +84,7 @@ println("opLogReader threadName>>> $threadName")
         val tempFile = Files.createTempFile("oplog-", ".xlsx").toFile()
         return ExcelStreamingItemWriter(
             outputFilePath = tempFile.absolutePath,
-            columnHeaders = listOf("用户ID", "用户名", "邮箱地址"),
+            columnHeaders = listOf("ID", "method", "uri"),
             rowMapper = { record, row ->
                 row.createCell(0).setCellValue(record.id.toString())
                 row.createCell(1).setCellValue(record.method)

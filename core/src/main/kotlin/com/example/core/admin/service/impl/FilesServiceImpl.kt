@@ -10,7 +10,7 @@ import com.example.core.admin.dto.res.files.FilesItemRes
 import com.example.core.admin.dto.res.files.category.FilesCategoryItemRes
 import org.springframework.stereotype.Service
 import com.example.core.admin.service.FilesService
-import com.example.core.extension.paginate
+import com.example.data.extension.paginate
 import com.example.data.admin.enums.SortEnum
 import com.example.data.admin.enums.files.FilesTypeEnum
 import com.example.data.generated.admin.tables.references.FILES
@@ -129,7 +129,7 @@ class FilesServiceImpl(
             )
                 .from(FILES)
                 .leftJoin(FILES_CATEGORY).on(FILES.CATEGORY_ID.eq(FILES_CATEGORY.ID))
-                .where(condition).orderBy(orderBy)
+                .orderBy(orderBy)
         }
 
         return res.map{ record->

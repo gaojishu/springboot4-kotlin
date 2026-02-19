@@ -14,7 +14,7 @@ jooq {
                 jdbc {
                     // 推荐从根目录的 gradle.properties 读取，避免写死
                     driver = "org.postgresql.Driver"
-                    url = "jdbc:postgresql://localhost:5432/spring"
+                    url = "jdbc:postgresql://localhost:5432/spring1"
                     user = "postgres"
                     password = "123321"
                 }

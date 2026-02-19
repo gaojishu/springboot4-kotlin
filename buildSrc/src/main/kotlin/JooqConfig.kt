@@ -24,7 +24,13 @@ object JooqConfig {
             userType = "kotlin.collections.List<kotlin.String>"
             converter = "com.example.data.converter.JsonToListConverter"
             includeExpression = ".*\\.permission_key"
-            includeTypes = "JSONB|JSON|TEXT"
+            includeTypes = "JSON"
+        },
+        ForcedType().apply {
+            userType = "kotlin.collections.List<kotlin.String>"
+            converter = "com.example.data.converter.JsonToListConverter"
+            includeExpression = "admin\\.notice\\.attachments"
+            includeTypes = "JSON"
         }
 
     )

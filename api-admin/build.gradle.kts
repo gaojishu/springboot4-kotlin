@@ -17,6 +17,7 @@ dependencies {
     // 2. 引入 Web 运行环境
     implementation("org.springframework.boot:spring-boot-starter-web")
 
+    implementation("org.springframework.boot:spring-boot-starter-websocket")
 
 
     // Kotlin 依赖在根目录 subprojects 已统一配置，此处无需重复

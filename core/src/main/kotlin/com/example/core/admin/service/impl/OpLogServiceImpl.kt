@@ -6,7 +6,8 @@ import org.springframework.stereotype.Service
 import com.example.core.admin.service.OpLogService
 import com.example.core.admin.dto.res.op.log.OpLogItemRes
 import com.example.core.admin.query.OpLogQueryProvider
-import com.example.core.extension.paginate
+import com.example.core.admin.security.LoginAdmin
+import com.example.data.extension.paginate
 import com.example.data.generated.admin.tables.references.OP_LOG
 import org.jooq.DSLContext
 import org.springframework.batch.core.job.Job
@@ -15,6 +16,7 @@ import org.springframework.batch.core.launch.JobOperator
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
+import org.springframework.security.core.context.SecurityContextHolder
 import tools.jackson.databind.ObjectMapper
 import java.util.UUID
 
@@ -31,6 +33,28 @@ class OpLogServiceImpl(
     private val objectMapper: ObjectMapper,
 ): OpLogService {
 
+    override fun create(
+        adminId: Long?,
+        ip: String?,
+        method: String?,
+        remark: String?,
+        duration: Long,
+        uri: String?,
+        params: String?,
+        queryParams: String?
+    ) {
+        dsl.insertInto(OP_LOG)
+            .set(OP_LOG.ADMIN_ID, adminId)
+            .set(OP_LOG.DURATION, duration)
+            .set(OP_LOG.IP, ip)
+            .set(OP_LOG.METHOD, method)
+            .set(OP_LOG.REMARK, remark)
+            .set(OP_LOG.URI, uri)
+            .set(OP_LOG.PARAMS, params)
+            .set(OP_LOG.QUERY_PARAMS, queryParams)
+            .execute()
+
+    }
 
     override fun export(req: OpLogQueryReq): Long {
         val opLogQueryBO = OpLogQueryBO(
@@ -48,9 +72,14 @@ class OpLogServiceImpl(
             )
         )
         val reqJson = objectMapper.writeValueAsString(opLogQueryBO)
+        val authentication = SecurityContextHolder.getContext().authentication
+        val admin = authentication?.principal as LoginAdmin
+
         // 1. 构建 JobParameters
         val jobParameters = JobParametersBuilder()
             .addString("opLogQueryBO", reqJson)
+            .addString("username", admin.username)
+            .addLong("adminId", admin.id)
             .addString("uuid", UUID.randomUUID().toString())
             .toJobParameters()
         val job = jobOperator.start(opLogExportJob, jobParameters)

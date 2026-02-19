@@ -16,4 +16,5 @@ interface AdminService {
     fun deleteById(id: Long)
     fun create(req: AdminCreateReq)
     fun updateById(req: AdminUpdateReq)
+    fun selectByUsername(username: String): AdminItemRes?
 }

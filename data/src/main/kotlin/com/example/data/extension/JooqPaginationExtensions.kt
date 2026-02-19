@@ -1,6 +1,7 @@
-package com.example.core.extension
+package com.example.data.extension
 
 import org.jooq.*
+import org.jooq.impl.DSL
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
@@ -14,7 +15,7 @@ import org.springframework.data.domain.Pageable
 fun DSLContext.paginate(
     countTable: Table<*>,
     pageable: Pageable,
-    condition: Condition = org.jooq.impl.DSL.noCondition(),
+    condition: Condition = DSL.noCondition(),
     querySupplier: (DSLContext) -> SelectLimitStep<*>
 ): Page<Record> {
     val total = this.fetchCount(countTable, condition).toLong()
