@@ -1,12 +1,9 @@
 package ${package.Service}
 
-import ${package.Entity}.${table.entityName}
-import com.baomidou.mybatisplus.extension.service.IService;
-
 /**
  * @author xkl
  * @since 2026-02-12
  */
-interface ${table.serviceName} : IService<${table.entityName}>{
+interface ${table.serviceName} {
 
 }
