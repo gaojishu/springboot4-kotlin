@@ -10,6 +10,7 @@ dependencies {
     // 引用内部模块
    implementation(project(":base"))
 
+
     //数据库
     runtimeOnly("org.postgresql:postgresql")
     implementation("org.jetbrains.kotlin:kotlin-reflect")

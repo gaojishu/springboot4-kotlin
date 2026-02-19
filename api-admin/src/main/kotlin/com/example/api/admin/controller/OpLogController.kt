@@ -20,4 +20,10 @@ class OpLogController{
         val page = opLogService.page(req)
         return ApiResult.ok<Page<OpLogItemRes>>().data(page)
     }
+
+    @PostMapping("/export")
+    fun export(@Valid @RequestBody req: OpLogQueryReq): ApiResult<Long> {
+        val res = opLogService.export(req)
+        return ApiResult.ok<Long>().message("操作成功").data(res)
+    }
 }

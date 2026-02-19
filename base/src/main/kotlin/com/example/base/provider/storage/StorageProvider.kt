@@ -1,9 +1,10 @@
 package com.example.base.provider.storage
 
 import com.example.base.dto.storage.AliyunUploadPolicyDTO
+import java.io.File
 
 interface StorageProvider {
-    fun upload(file: ByteArray, path: String): String
+    fun upload(file: File): String
     fun delete(path: String)
     fun exists(path: String): Boolean
     fun generatePresignedUrl(path: String): String

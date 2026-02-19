@@ -25,11 +25,11 @@ data.result
 
 
 
-模块	类名示例	职责描述
-api-admin	AdminController	负责 HTTP 协议、参数接收、返回 Result 对象。
-core (Application)	AdminService	应用服务：负责流程编排、事务控制、DTO 转换。
-core (Domain)	AdminDomainService	领域服务：负责核心业务规则（状态校验、密码验证）、跨实体逻辑。
-data	AdminMapper	基础设施：负责执行 SQL。
+模块
+api-admin
+core (Application) 应用服务
+core (Domain)	领域服务
+data	
 ```
 
 

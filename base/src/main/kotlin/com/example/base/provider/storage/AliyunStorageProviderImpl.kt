@@ -31,8 +31,10 @@ class AliyunStorageProviderImpl(
     private val expireSeconds = 7200L // 策略有效期：7200秒 = 2小时
     private val mapper = jacksonObjectMapper()
 
-    override fun upload(file: ByteArray, path: String): String {
-        return ""
+    override fun upload(file: File): String {
+        val key = rename(objectName = file.name, fileType = file.extension)
+        ossClient.putObject(ossProperties.bucketName,key,file)
+        return key
     }
 
     override fun delete(path: String) {

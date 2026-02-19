@@ -10,5 +10,5 @@ import org.springframework.data.domain.Page
  */
 interface OpLogService{
     fun page(req: OpLogQueryReq): Page<OpLogItemRes>
-
+    fun export(req: OpLogQueryReq): Long
 }
