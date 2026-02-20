@@ -11,7 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import com.example.core.admin.service.FilesService
 import jakarta.validation.Valid
 import org.springframework.data.domain.Page
+import org.springframework.security.access.prepost.PreAuthorize
 
+
+@PreAuthorize("hasAuthority('file:all')")
 @RestController
 @RequestMapping("/files")
 class FilesController{

@@ -5,8 +5,8 @@ import org.springframework.security.core.userdetails.User
 
 class LoginAdmin(
     val id: Long,
-    val permissions: List<String>?,
     username: String,
     password: String,
+    disabled: Boolean = false,
     authorities: Collection<GrantedAuthority>
 ) : User(username, password, authorities)

@@ -7,7 +7,9 @@ import com.example.core.admin.dto.res.files.category.FilesCategoryItemRes
 import org.springframework.web.bind.annotation.*
 import org.springframework.beans.factory.annotation.Autowired
 import com.example.core.admin.service.FilesCategoryService
+import org.springframework.security.access.prepost.PreAuthorize
 
+@PreAuthorize("hasAuthority('file:all')")
 @RestController
 @RequestMapping("/files_category")
 class FilesCategoryController{

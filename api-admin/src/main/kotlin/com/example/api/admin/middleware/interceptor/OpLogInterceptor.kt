@@ -43,19 +43,21 @@ class OpLogInterceptor: HandlerInterceptor {
         val bodyContent = cachedRequest?.contentAsByteArray
         val requestBody: String? = bodyContent?.let { String(it, Charsets.UTF_8) }
         val queryString = request.queryString
-        val authentication = SecurityContextHolder.getContext().authentication
-        val admin = authentication?.principal as LoginAdmin
+        val principal = SecurityContextHolder.getContext().authentication?.principal
 
-        opLogService.create(
-            adminId = admin.id,
-            duration = duration,
-            ip = request.remoteAddr,
-            method = request.method,
-            remark = null,
-            uri = request.requestURI,
-            params = requestBody,
-            queryParams = queryString
-        )
+        if (principal is LoginAdmin) {
+            val admin = principal
+            opLogService.create(
+                adminId = admin.id,
+                duration = duration,
+                ip = request.remoteAddr,
+                method = request.method,
+                remark = null,
+                uri = request.requestURI,
+                params = requestBody,
+                queryParams = queryString
+            )
+        }
     }
 
     override fun afterCompletion(

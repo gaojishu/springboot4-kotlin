@@ -18,7 +18,9 @@ class RoleServiceImpl(
     private val dsl: DSLContext
 ): RoleService {
     override fun getAll(): List<RoleItemRes> {
-        val res = dsl.selectFrom(ROLE).fetchInto(RoleItemRes::class.java)
+        val res = dsl.selectFrom(ROLE)
+            .orderBy(ROLE.ID.asc())
+            .fetchInto(RoleItemRes::class.java)
 
         return res
     }

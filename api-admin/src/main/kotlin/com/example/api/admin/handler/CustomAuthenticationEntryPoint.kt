@@ -1,4 +1,4 @@
-package com.example.api.admin.security
+package com.example.api.admin.handler
 
 import com.example.api.admin.dto.ApiResult
 import jakarta.servlet.http.HttpServletRequest
@@ -19,8 +19,8 @@ class CustomAuthenticationEntryPoint(private val objectMapper: ObjectMapper): Au
 
         val status = HttpStatus.UNAUTHORIZED
         // 1. 构建 Result 对象
-        val result = ApiResult.error<Unit>()
-            .message("未登录")
+        val result = ApiResult.Companion.error<Unit>()
+            .message("未登录.")
             .code(status.value())
 
         // 2. 写入 Response

@@ -1,4 +1,4 @@
-package com.example.api.admin.security
+package com.example.api.admin.handler
 
 import com.example.api.admin.dto.ApiResult
 import jakarta.servlet.http.HttpServletRequest
@@ -9,7 +9,6 @@ import org.springframework.security.web.access.AccessDeniedHandler
 import org.springframework.stereotype.Component
 import tools.jackson.databind.ObjectMapper
 
-
 @Component
 class CustomAccessDeniedHandler(private val objectMapper: ObjectMapper) : AccessDeniedHandler {
     override fun handle(
@@ -19,8 +18,8 @@ class CustomAccessDeniedHandler(private val objectMapper: ObjectMapper) : Access
     ) {
         val status = HttpStatus.FORBIDDEN
         // 1. 构建 Result 对象
-        val result = ApiResult.error<Unit>()
-            .message("无权限")
+        val result = ApiResult.Companion.error<Unit>()
+            .message("无权限.")
             .code(status.value())
 
         // 2. 写入 Response

@@ -27,7 +27,7 @@ class PermissionServiceImpl(
 
     override fun selectByAdminId(adminId: Long): List<PermissionItemRes> {
         var records = emptyList<PermissionItemRes>()
-        if(adminId != 1L){
+        if(adminId == 1L){
             records = dsl.selectFrom(PERMISSION)
                 .orderBy(PERMISSION.SORT.asc())
                 .fetchInto(PermissionItemRes::class.java)
@@ -56,7 +56,7 @@ class PermissionServiceImpl(
 
     override fun getAll(): List<PermissionItemRes> {
         val records = dsl.selectFrom(PERMISSION)
-            .orderBy(PERMISSION.SORT.asc())
+            .orderBy(PERMISSION.SORT.asc(), PERMISSION.ID.asc())
             .fetchInto(PermissionItemRes::class.java)
 
         return records

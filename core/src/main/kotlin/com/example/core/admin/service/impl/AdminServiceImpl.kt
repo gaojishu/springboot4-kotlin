@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import com.example.data.extension.paginate
 import com.example.data.admin.enums.SortEnum
 import com.example.data.generated.admin.tables.references.ADMIN_
+import com.example.data.generated.admin.tables.references.ADMIN_PERMISSION
 import org.jooq.Condition
 import org.jooq.DSLContext
 import org.jooq.SortField
@@ -103,7 +104,6 @@ class AdminServiceImpl(
             context ->
             context.select(ADMIN_)
             .from(ADMIN_)
-            .where(condition)
             .orderBy(buildOrderBy(req.sort))
         }
         return res.map { record ->
@@ -118,6 +118,38 @@ class AdminServiceImpl(
             .where(ADMIN_.ID.eq(id))
             .execute()
     }
+
+    private fun assignPermissions(adminId: Long, permissionKey: List<String>?) {
+        val permissionIds = permissionKey
+            ?.flatMap { it.split("-") } // 1. 将 ["1-12-23", "1-12-24"] 展开为 ["1", "12", "23", "1", "12", "24"]
+            ?.map { it.toLong() }       // 2. 转换为 Long 类型（对应数据库 ID 类型）
+            ?.distinct()                // 3. 去重，得到 [1, 12, 23, 24]
+        dsl.transaction { _ ->
+            // 1. 先物理删除该管理员之前所有的权限关联
+            dsl.deleteFrom(ADMIN_PERMISSION)
+                .where(ADMIN_PERMISSION.ADMIN_ID.eq(adminId))
+                .execute()
+
+            // 2. 如果传入的权限列表为空，说明是“取消所有权限”，直接返回
+            if (permissionIds.isNullOrEmpty()) return@transaction
+
+            // 3. 构造批量插入语句
+            // 这种写法生成的 SQL 类似于：INSERT INTO admin_permission (admin_id, permission_id) VALUES (1, 101), (1, 102)...
+            val insertStep = dsl.insertInto(
+                ADMIN_PERMISSION,
+                ADMIN_PERMISSION.ADMIN_ID,
+                ADMIN_PERMISSION.PERMISSION_ID
+            )
+
+            permissionIds.forEach { permissionId ->
+                insertStep.values(adminId, permissionId)
+            }
+
+            // 4. 执行批量插入
+            insertStep.execute()
+        }
+    }
+
     /**
      * 创建
      */
@@ -126,7 +158,7 @@ class AdminServiceImpl(
             req.username,
             req.password
         )
-        dsl.insertInto(ADMIN_)
+        val newId = dsl.insertInto(ADMIN_)
             .set(ADMIN_.USERNAME, req.username)
             .set(ADMIN_.MOBILE, req.mobile)
             .set(ADMIN_.DISABLED_STATUS, req.disabledStatus)
@@ -134,7 +166,15 @@ class AdminServiceImpl(
             .set(ADMIN_.EMAIL, req.email)
             .set(ADMIN_.NICKNAME, req.nickname)
             .set(ADMIN_.PERMISSION_KEY, req.permissionKey)
-            .execute()
+            .returning(ADMIN_.ID)
+            .fetchOne()
+            ?.id ?: throw BusinessException("创建失败")
+
+
+        assignPermissions(
+            adminId = newId,
+            permissionKey = req.permissionKey
+        )
     }
 
     override fun updateById(req: AdminUpdateReq) {
@@ -176,6 +216,10 @@ class AdminServiceImpl(
         }
 
         record.store()
+        assignPermissions(
+            adminId = req.id,
+            permissionKey = req.permissionKey
+        )
     }
 
     override fun logout() {

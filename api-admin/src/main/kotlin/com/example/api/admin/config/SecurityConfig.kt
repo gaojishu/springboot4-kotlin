@@ -1,6 +1,6 @@
 package com.example.api.admin.config
 
-import com.example.api.admin.security.AuthFilter
+import com.example.api.admin.middleware.filter.SecurityFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -8,12 +8,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import com.example.api.admin.security.CustomAuthenticationEntryPoint
-import com.example.api.admin.security.CustomAccessDeniedHandler
+import com.example.api.admin.handler.CustomAuthenticationEntryPoint
+import com.example.api.admin.handler.CustomAccessDeniedHandler
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
+@EnableMethodSecurity
 @Configuration
 @EnableWebSecurity
 class SecurityConfig(
@@ -23,9 +25,9 @@ class SecurityConfig(
     @Bean
     fun filterChain(
         http: HttpSecurity,
-        authFilter: AuthFilter
+        securityFilter: SecurityFilter
     ): SecurityFilterChain {
-        http.addFilterBefore(authFilter,UsernamePasswordAuthenticationFilter::class.java)
+        http.addFilterBefore(securityFilter,UsernamePasswordAuthenticationFilter::class.java)
 
         val array = arrayOf(
             "/auth/login",

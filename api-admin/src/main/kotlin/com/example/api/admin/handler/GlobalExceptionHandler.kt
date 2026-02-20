@@ -8,9 +8,16 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.bind.MethodArgumentNotValidException
+import org.springframework.security.access.AccessDeniedException
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
+
+    // 1. 新增这个方法，让权限异常“穿透”回到 Security 过滤器
+    @ExceptionHandler(AccessDeniedException::class)
+    fun handleAccessDeniedException(e: AccessDeniedException) {
+        throw e
+    }
 
     /**
      * 捕获自定义业务异常 (来自 core 或 domain)

@@ -1,6 +1,7 @@
-package com.example.api.admin.security
+package com.example.api.admin.middleware.filter
 
 import com.example.base.provider.token.TokenProvider
+import com.example.base.utils.log
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 
 @Component
-class AuthFilter(
+class SecurityFilter(
     @Autowired private val userDetailsService: UserDetailsService,
     @Autowired private val tokenProvider: TokenProvider,
 ) : OncePerRequestFilter() {
@@ -44,7 +45,8 @@ class AuthFilter(
                 )
                 authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
                 SecurityContextHolder.getContext().authentication = authentication
-            } catch (_: Exception) {
+            } catch (e: Exception) {
+                log.error("Token 解析失败: ${e.message}")
                 SecurityContextHolder.clearContext()
             }
         }
