@@ -13,8 +13,8 @@ import com.example.core.admin.service.FilesService
 import com.example.data.extension.paginate
 import com.example.data.admin.enums.SortEnum
 import com.example.data.admin.enums.files.FilesTypeEnum
-import com.example.data.generated.admin.tables.references.FILES
-import com.example.data.generated.admin.tables.references.FILES_CATEGORY
+import com.example.data.jooq.tables.references.FILES
+import com.example.data.jooq.tables.references.FILES_CATEGORY
 import org.jooq.Condition
 import org.jooq.DSLContext
 import org.jooq.SortField

@@ -2,8 +2,8 @@ package com.example.core.admin.query
 
 import com.example.core.admin.dto.req.batch.job.BatchJobQueryReq
 import com.example.data.admin.enums.SortEnum
-import com.example.data.generated.admin.tables.references.BATCH_JOB_EXECUTION
-import com.example.data.generated.admin.tables.references.BATCH_JOB_INSTANCE
+import com.example.data.jooq.tables.references.BATCH_JOB_EXECUTION
+import com.example.data.jooq.tables.references.BATCH_JOB_INSTANCE
 import org.jooq.Condition
 import org.jooq.SortField
 import org.jooq.impl.DSL

@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service
 import com.example.core.admin.service.NoticeService
 import com.example.data.extension.paginate
 import com.example.data.admin.enums.SortEnum
-import com.example.data.generated.admin.tables.records.NoticeRecord
-import com.example.data.generated.admin.tables.references.NOTICE
+import com.example.data.jooq.tables.records.NoticeRecord
+import com.example.data.jooq.tables.references.NOTICE
 import org.jooq.Condition
 import org.jooq.DSLContext
 import org.jooq.SortField

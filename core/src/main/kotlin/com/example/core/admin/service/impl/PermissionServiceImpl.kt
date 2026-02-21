@@ -6,11 +6,11 @@ import com.example.core.admin.dto.req.permission.PermissionUpdateReq
 import com.example.core.admin.dto.res.admin.AdminItemRes
 import com.example.core.admin.dto.res.permission.PermissionItemRes
 import com.example.core.admin.service.PermissionService
-import com.example.data.generated.admin.tables.records.PermissionRecord
+import com.example.data.jooq.tables.records.PermissionRecord
 import org.springframework.stereotype.Service
-import com.example.data.generated.admin.tables.references.ADMIN_
-import com.example.data.generated.admin.tables.references.ADMIN_PERMISSION
-import com.example.data.generated.admin.tables.references.PERMISSION
+import com.example.data.jooq.tables.references.ADMIN_
+import com.example.data.jooq.tables.references.ADMIN_PERMISSION
+import com.example.data.jooq.tables.references.PERMISSION
 import org.jooq.DSLContext
 import org.jooq.impl.DSL.multiset
 import org.jooq.impl.DSL.select

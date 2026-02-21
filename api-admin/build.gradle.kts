@@ -21,8 +21,10 @@ dependencies {
 
 
     // Kotlin 依赖在根目录 subprojects 已统一配置，此处无需重复
-}
 
+
+
+}
 
 tasks.test {
     useJUnitPlatform()

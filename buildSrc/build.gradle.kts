@@ -1,6 +1,6 @@
 // buildSrc/build.gradle.kts
 plugins {
-    `kotlin-dsl` // 开启 Kotlin DSL 插件支持
+    `kotlin-dsl`
 }
 
 repositories {
@@ -9,12 +9,20 @@ repositories {
 }
 
 dependencies {
-    implementation("tools.jackson.module:jackson-module-kotlin:3.0.4")
+    implementation(kotlin("gradle-plugin"))
+    implementation(kotlin("allopen"))
 
-    // 必须包含这个依赖，JooqConfig.kt 才能识别 ForcedType 和相关配置类
+    // 1. Flyway 插件及其驱动 (用于执行 flywayMigrate)
+    implementation("org.flywaydb:flyway-gradle-plugin:11.20.3")
+    runtimeOnly("org.flywaydb:flyway-database-postgresql:11.20.3")
+
+// Source: https://mvnrepository.com/artifact/org.postgresql/postgresql
+    implementation("org.postgresql:postgresql:42.7.10")
+
+    // 2. jOOQ 插件及其代码生成核心
+    implementation("org.jooq:jooq-codegen-gradle:3.19.30")
     implementation("org.jooq:jooq-codegen:3.19.30")
     implementation("org.jooq:jooq-meta:3.19.30")
 
-    // 生成器官方插件
-    implementation("org.jooq:jooq-codegen-gradle:3.19.30")
 }
+

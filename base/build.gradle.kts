@@ -2,16 +2,7 @@
 
 
 dependencies {
-    // 必须包含此依赖，Spring 才会自动配置 ObjectMapper Bean
-    api("org.springframework.boot:spring-boot-starter-json")
-    // Source: https://mvnrepository.com/artifact/tools.jackson.module/jackson-module-kotlin
-    api("tools.jackson.module:jackson-module-kotlin:3.0.4")
 
-    // Source: https://mvnrepository.com/artifact/tools.jackson.datatype/jackson-datatype-jsr310
-    api("tools.jackson.datatype:jackson-datatype-jsr310:3.0.0-rc2")
-
-// Source: https://mvnrepository.com/artifact/tools.jackson.core/jackson-databind
-    api("tools.jackson.core:jackson-databind:3.0.4")
 
     api("org.springframework.boot:spring-boot-starter-data-redis")
 

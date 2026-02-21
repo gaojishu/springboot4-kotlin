@@ -15,8 +15,8 @@ import com.example.core.admin.dto.res.admin.AdminItemRes
 import org.springframework.security.core.context.SecurityContextHolder
 import com.example.data.extension.paginate
 import com.example.data.admin.enums.SortEnum
-import com.example.data.generated.admin.tables.references.ADMIN_
-import com.example.data.generated.admin.tables.references.ADMIN_PERMISSION
+import com.example.data.jooq.tables.references.ADMIN_
+import com.example.data.jooq.tables.references.ADMIN_PERMISSION
 import org.jooq.Condition
 import org.jooq.DSLContext
 import org.jooq.SortField

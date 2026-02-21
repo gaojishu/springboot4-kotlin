@@ -2,10 +2,7 @@
 dependencies {
     // 引用内部模块
     implementation(project(":base"))
-
     implementation(project(":data"))
-
-
     api("org.springframework.boot:spring-boot-starter-security")
     api("org.springframework.boot:spring-boot-starter-validation")
     api("org.springframework.boot:spring-boot-starter-batch")
@@ -13,11 +10,12 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-batch-jdbc")  // 必须显式添加！
 
 // Source: https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml
-    api("org.apache.poi:poi-ooxml:5.5.1")
+    api("org.apache.poi:poi-ooxml:5.5.+")
 
+    // mapstruct 对象映射 转换器 暂时没用
     // Source: https://mvnrepository.com/artifact/org.mapstruct/mapstruct
-    implementation("org.mapstruct:mapstruct:1.6.3")
-    kapt("org.mapstruct:mapstruct-processor:1.6.3")
+//    implementation("org.mapstruct:mapstruct:1.6.3")
+//    kapt("org.mapstruct:mapstruct-processor:1.6.3")
 
 
 

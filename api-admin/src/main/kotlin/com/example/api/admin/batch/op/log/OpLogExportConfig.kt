@@ -6,8 +6,8 @@ import com.example.api.admin.batch.JooqStreamingItemReader
 import com.example.core.admin.dto.bo.op.log.OpLogQueryBO
 import com.example.core.admin.dto.res.op.log.OpLogItemRes
 import com.example.core.admin.query.OpLogQueryProvider
-import com.example.data.generated.admin.tables.records.OpLogRecord
-import com.example.data.generated.admin.tables.references.OP_LOG
+import com.example.data.jooq.tables.records.OpLogRecord
+import com.example.data.jooq.tables.references.OP_LOG
 import org.jooq.DSLContext
 import org.springframework.batch.core.configuration.annotation.StepScope
 import org.springframework.batch.core.job.Job

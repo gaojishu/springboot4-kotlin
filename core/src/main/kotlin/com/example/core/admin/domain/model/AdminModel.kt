@@ -2,7 +2,7 @@ package com.example.core.admin.domain.model
 
 import com.example.base.exception.BusinessException
 import com.example.data.admin.enums.admin.AdminDisabledStatusEnum
-import com.example.data.generated.admin.tables.records.AdminRecord
+import com.example.data.jooq.tables.records.AdminRecord
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 fun AdminRecord.verifyIsDisabled() {

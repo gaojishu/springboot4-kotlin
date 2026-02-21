@@ -3,7 +3,7 @@ package com.example.core.admin.service.impl
 import com.example.base.exception.BusinessException
 import com.example.core.admin.security.LoginAdmin
 import com.example.core.admin.service.PermissionService
-import com.example.data.generated.admin.tables.references.ADMIN_
+import com.example.data.jooq.tables.references.ADMIN_
 import org.jooq.DSLContext
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails

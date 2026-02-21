@@ -8,7 +8,7 @@ import com.example.core.admin.dto.res.op.log.OpLogItemRes
 import com.example.core.admin.query.OpLogQueryProvider
 import com.example.core.admin.security.LoginAdmin
 import com.example.data.extension.paginate
-import com.example.data.generated.admin.tables.references.OP_LOG
+import com.example.data.jooq.tables.references.OP_LOG
 import org.jooq.DSLContext
 import org.springframework.batch.core.job.Job
 import org.springframework.batch.core.job.parameters.JobParametersBuilder

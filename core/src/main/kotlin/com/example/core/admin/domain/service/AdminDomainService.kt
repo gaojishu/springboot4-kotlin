@@ -3,7 +3,7 @@ package com.example.core.admin.domain.service
 import com.example.base.exception.BusinessException
 import com.example.core.admin.domain.model.verifyIsDisabled
 import com.example.core.admin.domain.model.verifyPassword
-import com.example.data.generated.admin.tables.records.AdminRecord
+import com.example.data.jooq.tables.records.AdminRecord
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Component
 

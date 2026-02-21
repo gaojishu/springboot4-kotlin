@@ -5,7 +5,7 @@ import com.example.core.admin.dto.req.role.RoleCreateReq
 import com.example.core.admin.dto.req.role.RoleUpdateReq
 import com.example.core.admin.dto.res.role.RoleItemRes
 import com.example.core.admin.service.RoleService
-import com.example.data.generated.admin.tables.references.ROLE
+import com.example.data.jooq.tables.references.ROLE
 import org.jooq.DSLContext
 import org.springframework.stereotype.Service
 

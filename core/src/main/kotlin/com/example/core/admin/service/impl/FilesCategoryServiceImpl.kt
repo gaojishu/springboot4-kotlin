@@ -6,8 +6,8 @@ import com.example.core.admin.dto.req.files.category.FilesCategoryUpdateReq
 import com.example.core.admin.dto.res.files.category.FilesCategoryItemRes
 import org.springframework.stereotype.Service
 import com.example.core.admin.service.FilesCategoryService
-import com.example.data.generated.admin.tables.references.FILES
-import com.example.data.generated.admin.tables.references.FILES_CATEGORY
+import com.example.data.jooq.tables.references.FILES
+import com.example.data.jooq.tables.references.FILES_CATEGORY
 import org.jooq.DSLContext
 
 /**

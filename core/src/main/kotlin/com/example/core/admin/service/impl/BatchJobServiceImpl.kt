@@ -6,8 +6,8 @@ import com.example.core.admin.dto.res.batch.job.BatchJobInstanceRes
 import com.example.core.admin.query.BatchJobQueryProvider
 import com.example.core.admin.service.BatchJobService
 import com.example.data.extension.paginate
-import com.example.data.generated.admin.tables.references.BATCH_JOB_EXECUTION
-import com.example.data.generated.admin.tables.references.BATCH_JOB_INSTANCE
+import com.example.data.jooq.tables.references.BATCH_JOB_EXECUTION
+import com.example.data.jooq.tables.references.BATCH_JOB_INSTANCE
 import org.jooq.DSLContext
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest

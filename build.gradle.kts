@@ -1,9 +1,10 @@
 plugins {
-    kotlin("jvm") version "2.2.21"
-    kotlin("plugin.spring") version "2.2.21"
-    id("org.springframework.boot") version "4.0.2" apply false
+    kotlin("jvm")
+    kotlin("plugin.spring")
+    kotlin("kapt")
+
+    id("org.springframework.boot") version "4.0.3" apply false
     id("io.spring.dependency-management") version "1.1.7"
-    kotlin("kapt") version "2.2.21"
 }
 group = "com.example"
 version = "0.0.1-SNAPSHOT"
@@ -34,7 +35,22 @@ subprojects {
     dependencies {
 
         implementation("org.springframework.boot:spring-boot-starter")
+        // 必须包含此依赖，Spring 才会自动配置 ObjectMapper Bean
+        implementation("org.springframework.boot:spring-boot-starter-json")
+
         implementation("org.jetbrains.kotlin:kotlin-reflect")
+        // Source: https://mvnrepository.com/artifact/tools.jackson.module/jackson-module-kotlin
+        implementation("tools.jackson.module:jackson-module-kotlin:3.0.+")
+
+        // Source: https://mvnrepository.com/artifact/tools.jackson.datatype/jackson-datatype-jsr310
+        implementation("tools.jackson.datatype:jackson-datatype-jsr310:3.0.+")
+
+// Source: https://mvnrepository.com/artifact/tools.jackson.core/jackson-databind
+        implementation("tools.jackson.core:jackson-databind:3.0.+")
+
+
+
+
         testImplementation("org.springframework.boot:spring-boot-starter-test")
         testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
         testRuntimeOnly("org.junit.platform:junit-platform-launcher")
