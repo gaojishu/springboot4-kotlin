@@ -61,17 +61,17 @@ subprojects {
             freeCompilerArgs.addAll("-Xjsr305=strict", "-Xannotation-default-target=param-property")
         }
     }
-
-    tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
-        enabled = false
-    }
-
 }
-// 针对需要启动的模块单独开启
-project(":api-admin") {
-    tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
-        enabled = true
-        // 手动指定 mainClass（如果自动识别失败）
-        mainClass.set("com.example.api.admin.AdminApplicationKt")
-    }
+
+// 禁用根项目的编译任务
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    enabled = false
 }
+
+// 禁用根项目的 Jar 打包
+tasks.named<Jar>("jar") {
+    enabled = false
+}
+
+// 如果有 Spring Boot 插件，禁用其 BootJar
+tasks.findByPath("bootJar")?.enabled = false

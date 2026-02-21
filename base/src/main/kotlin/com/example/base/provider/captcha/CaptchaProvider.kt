@@ -4,5 +4,5 @@ import com.example.base.dto.CaptchaDTO
 
 interface CaptchaProvider {
     fun createCaptcha(): CaptchaDTO
-    fun validateAndConsume(code: String, uuid: String): Boolean
+    fun validateAndConsume(uuid: String, inputCode: String): Boolean
 }

@@ -14,7 +14,7 @@ import org.springframework.data.domain.Page
 interface FilesService {
     fun create(req: FilesCreateReq)
     fun updateById(req: FilesUpdateReq)
-    fun deleteByKey(keys: FilesDeleteReq)
+    fun deleteByKey(req: FilesDeleteReq)
     fun page(req: FilesQueryReq): Page<FilesItemRes>
     fun getByHash(hash: String): FilesItemRes?
 }
